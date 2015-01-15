@@ -9,5 +9,5 @@ $ sudo apt-get install libboost-dev
 
 Qt5:
 ```shell
-sudo apt-get install qt5-default libqt5serialport5
+$ sudo apt-get install qt5-default libqt5serialport5
 ```
