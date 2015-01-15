@@ -11,3 +11,8 @@ Qt5:
 ```shell
 $ sudo apt-get install qt5-default libqt5serialport5-dev
 ```
+
+uDev:
+```shell
+$ sudo apt-get install libudev-dev
+```
