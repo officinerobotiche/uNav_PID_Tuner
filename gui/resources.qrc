@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/SetPoints.png</file>
+    </qresource>
+    <qresource prefix="/stylesheet">
+        <file>darkgreen.qss</file>
+    </qresource>
+</RCC>
