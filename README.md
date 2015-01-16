@@ -18,6 +18,8 @@ $ sudo apt-get install libudev-dev
 ```
 
 ## Compile instructions
+
+### Ubuntu
 Clone the repository and the C++ interface library
 ```shell
 $ mkdir ~/devel
