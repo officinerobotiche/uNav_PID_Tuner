@@ -187,8 +187,10 @@ bool MainWindow::sendEnable( bool enable )
 
     try
     {
-        enable_motor_t en = enable;
-        _uNav->parserSendPacket(_uNav->createDataPacket(ENABLE, HASHMAP_MOTION, (abstract_message_u*) & en), 3, boost::posix_time::millisec(200));
+        // TODO: x Raffaello: change with the new "enable"
+
+        //enable_motor_t en = enable;
+        //_uNav->parserSendPacket(_uNav->createDataPacket(ENABLE, HASHMAP_MOTION, (abstract_message_u*) & en), 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
     {
@@ -218,13 +220,137 @@ bool MainWindow::sendEnable( bool enable )
 bool MainWindow::sendSetpoint0( double setPoint )
 {
     if( !_connected )
+        return false;    
+
+    try
+    {
+        // TODO: x Raffaello: add the code to send the new speed command to Motor 0
+    }
+    catch( parser_exception& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
+
+        throw e;
         return false;
+    }
+    catch( boost::system::system_error& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
+
+        throw e;
+        return false;
+    }
+    catch(...)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
+
+        throw;
+        return false;
+    }
+
+    return true;
 }
 
 bool MainWindow::sendSetpoint1( double setPoint )
 {
     if( !_connected )
         return false;
+
+    try
+    {
+        // TODO
+    }
+    catch( parser_exception& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
+
+        throw e;
+        return false;
+    }
+    catch( boost::system::system_error& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
+
+        throw e;
+        return false;
+    }
+    catch(...)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
+
+        throw;
+        return false;
+    }
+
+    return true;
+}
+
+bool MainWindow::sendPIDGains0(double kp, double ki, double kd )
+{
+    if( !_connected )
+        return false;
+
+    try
+    {
+        // TODO: x Raffaello: add the code to send the PID gains to Motor 0
+    }
+    catch( parser_exception& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
+
+        throw e;
+        return false;
+    }
+    catch( boost::system::system_error& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
+
+        throw e;
+        return false;
+    }
+    catch(...)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
+
+        throw;
+        return false;
+    }
+
+    return true;
+}
+
+bool MainWindow::sendPIDGains1(double kp, double ki, double kd )
+{
+    if( !_connected )
+        return false;
+
+    try
+    {
+        // TODO
+    }
+    catch( parser_exception& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
+
+        throw e;
+        return false;
+    }
+    catch( boost::system::system_error& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
+
+        throw e;
+        return false;
+    }
+    catch(...)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
+
+        throw;
+        return false;
+    }
+
+    return true;
 }
 
 void MainWindow::on_pushButton_connect_clicked(bool checked)
@@ -265,12 +391,26 @@ void MainWindow::on_pushButton_connect_clicked(bool checked)
 
 void MainWindow::on_pushButton_send_gains_0_clicked()
 {
+    if( !_connected )
+        return;
 
+    double kp = ui->doubleSpinBox_kp_0->text().toDouble();
+    double ki = ui->doubleSpinBox_ki_0->text().toDouble();
+    double kd = ui->doubleSpinBox_kd_0->text().toDouble();
+
+    sendPIDGains0( kp, ki, kd );
 }
 
 void MainWindow::on_pushButton_send_gains_1_clicked()
 {
+    if( !_connected )
+        return;
 
+    double kp = ui->doubleSpinBox_kp_1->text().toDouble();
+    double ki = ui->doubleSpinBox_ki_1->text().toDouble();
+    double kd = ui->doubleSpinBox_kd_1->text().toDouble();
+
+    sendPIDGains1( kp, ki, kd );
 }
 
 void MainWindow::onSetPointUpdateTimerTimeout()
