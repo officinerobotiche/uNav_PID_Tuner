@@ -263,12 +263,14 @@ bool MainWindow::sendEnable( bool enable )
     try
     {
         std::vector<information_packet_t> list_send;
-        motor_control_t enable_left, enable_right;
-        enable_left.motor = (enable) ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
-        enable_right.motor = (enable) ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
-        list_send.push_back(_uNav->createDataPacket(ENABLE_MOTOR_L, HASHMAP_MOTION, (abstract_message_u*) & enable_left));
-        list_send.push_back(_uNav->createDataPacket(ENABLE_MOTOR_R, HASHMAP_MOTION, (abstract_message_u*) & enable_right));
-        serial_->parserSendPacket(list_send, 3, boost::posix_time::millisec(200));
+
+        motor_control_t enable_left = enable ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
+        motor_control_t enable_right = enable ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
+
+        list_send.push_back( _uNav->createDataPacket(ENABLE_MOTOR_L, HASHMAP_MOTION, (abstract_message_u*) & enable_left) );
+        list_send.push_back( _uNav->createDataPacket(ENABLE_MOTOR_R, HASHMAP_MOTION, (abstract_message_u*) & enable_right) );
+
+        _uNav->parserSendPacket( list_send, 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
     {
@@ -302,7 +304,7 @@ bool MainWindow::sendSetpoint0( double setPoint )
 
     try
     {
-        motor_control_t motor_ref = (int16_t) (setPoint*1000); //Convert in millirad/s
+        motor_control_t motor_ref = (int16_t) (setPoint*1000.0); //Convert in millirad/s
         _uNav->parserSendPacket(_uNav->createDataPacket(VEL_MOTOR_L, HASHMAP_MOTION, (abstract_message_u*) & motor_ref), 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
@@ -376,6 +378,7 @@ bool MainWindow::sendPIDGains0(double kp, double ki, double kd )
         pid.kp = kp;
         pid.ki = ki;
         pid.kd = kd;
+
         _uNav->parserSendPacket(_uNav->createDataPacket(PID_CONTROL_L, HASHMAP_MOTION, (abstract_message_u*) & pid), 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
@@ -414,6 +417,7 @@ bool MainWindow::sendPIDGains1(double kp, double ki, double kd )
         pid.kp = kp;
         pid.ki = ki;
         pid.kd = kd;
+
         _uNav->parserSendPacket(_uNav->createDataPacket(PID_CONTROL_R, HASHMAP_MOTION, (abstract_message_u*) & pid), 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
