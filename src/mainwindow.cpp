@@ -187,10 +187,21 @@ bool MainWindow::sendEnable( bool enable )
 
     try
     {
-        // TODO: x Raffaello: change with the new "enable"
-
-        //enable_motor_t en = enable;
-        //_uNav->parserSendPacket(_uNav->createDataPacket(ENABLE, HASHMAP_MOTION, (abstract_message_u*) & en), 3, boost::posix_time::millisec(200));
+        #define NUM_MOTORS 2
+        #define DISABLE_CONTROL_STATE 0
+        #define DIRECT_CONTROL_STATE 1
+        #define POSITION_CONTROL_STATE 2
+        #define VELOCITY_CONTROL_STATE 3
+        #define TORQUE_CONTROL_STATE 4
+        std::vector<information_packet_t> list_send;
+        motor_control_t enable[NUM_MOTORS];
+        for(i=0;i<NUM_MOTORS;++i) {
+            enable[i].num = 0;
+            enable[i].type = MOTOR_TYPE_REQ;
+            enable[i].motor = (enable) ? VELOCITY_CONTROL_STATE : DISABLE_CONTROL_STATE;
+            list_send.push_back(_uNav->createDataPacket(ENABLE_MOTOR, HASHMAP_MOTION, (abstract_message_u*) & enable[i]));
+        }
+        serial_->parserSendPacket(list_send, 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
     {
