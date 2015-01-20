@@ -36,6 +36,8 @@ protected:
     bool sendEnable(bool sendEnable=true);
     bool sendSetpoint0( double setPoint );
     bool sendSetpoint1( double setPoint );
+    bool sendPIDGains0(double kp, double ki, double kd );
+    bool sendPIDGains1( double kp, double ki, double kd );
     // <<<<< Motor commands
 
 private slots:

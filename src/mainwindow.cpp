@@ -262,8 +262,21 @@ bool MainWindow::sendEnable( bool enable )
 
     try
     {
-        enable_motor_t en = enable;
-        _uNav->parserSendPacket(_uNav->createDataPacket(ENABLE, HASHMAP_MOTION, (abstract_message_u*) & en), 3, boost::posix_time::millisec(200));
+        #define NUM_MOTORS 2
+        #define DISABLE_CONTROL_STATE 0
+        #define DIRECT_CONTROL_STATE 1
+        #define POSITION_CONTROL_STATE 2
+        #define VELOCITY_CONTROL_STATE 3
+        #define TORQUE_CONTROL_STATE 4
+        std::vector<information_packet_t> list_send;
+        motor_control_t enable[NUM_MOTORS];
+        for(i=0;i<NUM_MOTORS;++i) {
+            enable[i].num = 0;
+            enable[i].type = MOTOR_TYPE_REQ;
+            enable[i].motor = (enable) ? VELOCITY_CONTROL_STATE : DISABLE_CONTROL_STATE;
+            list_send.push_back(_uNav->createDataPacket(ENABLE_MOTOR, HASHMAP_MOTION, (abstract_message_u*) & enable[i]));
+        }
+        serial_->parserSendPacket(list_send, 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
     {
@@ -293,11 +306,11 @@ bool MainWindow::sendEnable( bool enable )
 bool MainWindow::sendSetpoint0( double setPoint )
 {
     if( !_connected )
-        return false;
+        return false;    
 
     try
     {
-        // TODO send command to board
+        // TODO: x Raffaello: add the code to send the new speed command to Motor 0
     }
     catch( parser_exception& e)
     {
@@ -331,7 +344,75 @@ bool MainWindow::sendSetpoint1( double setPoint )
 
     try
     {
-        // TODO send command to board
+        // TODO
+    }
+    catch( parser_exception& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
+
+        throw e;
+        return false;
+    }
+    catch( boost::system::system_error& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
+
+        throw e;
+        return false;
+    }
+    catch(...)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
+
+        throw;
+        return false;
+    }
+
+    return true;
+}
+
+bool MainWindow::sendPIDGains0(double kp, double ki, double kd )
+{
+    if( !_connected )
+        return false;
+
+    try
+    {
+        // TODO: x Raffaello: add the code to send the PID gains to Motor 0
+    }
+    catch( parser_exception& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
+
+        throw e;
+        return false;
+    }
+    catch( boost::system::system_error& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
+
+        throw e;
+        return false;
+    }
+    catch(...)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
+
+        throw;
+        return false;
+    }
+
+    return true;
+}
+
+bool MainWindow::sendPIDGains1(double kp, double ki, double kd )
+{
+    if( !_connected )
+        return false;
+
+    try
+    {
+        // TODO
     }
     catch( parser_exception& e)
     {
@@ -400,12 +481,26 @@ void MainWindow::on_pushButton_connect_clicked(bool checked)
 
 void MainWindow::on_pushButton_send_gains_0_clicked()
 {
+    if( !_connected )
+        return;
 
+    double kp = ui->doubleSpinBox_kp_0->text().toDouble();
+    double ki = ui->doubleSpinBox_ki_0->text().toDouble();
+    double kd = ui->doubleSpinBox_kd_0->text().toDouble();
+
+    sendPIDGains0( kp, ki, kd );
 }
 
 void MainWindow::on_pushButton_send_gains_1_clicked()
 {
+    if( !_connected )
+        return;
 
+    double kp = ui->doubleSpinBox_kp_1->text().toDouble();
+    double ki = ui->doubleSpinBox_ki_1->text().toDouble();
+    double kd = ui->doubleSpinBox_kd_1->text().toDouble();
+
+    sendPIDGains1( kp, ki, kd );
 }
 
 void MainWindow::onSetPointUpdateTimerTimeout()
