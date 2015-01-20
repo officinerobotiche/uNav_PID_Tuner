@@ -188,17 +188,17 @@ bool MainWindow::sendEnable( bool enable )
     try
     {
         #define NUM_MOTORS 2
-        #define DISABLE_CONTROL_STATE 0
-        #define DIRECT_CONTROL_STATE 1
-        #define POSITION_CONTROL_STATE 2
-        #define VELOCITY_CONTROL_STATE 3
-        #define TORQUE_CONTROL_STATE 4
+        #define STATE_CONTROL_DISABLE 0
+        #define STATE_CONTROL_DIRECT 1
+        #define STATE_CONTROL_POSITION 2
+        #define STATE_CONTROL_VELOCITY 3
+        #define STATE_CONTROL_TORQUE 4
         std::vector<information_packet_t> list_send;
         motor_control_t enable[NUM_MOTORS];
         for(i=0;i<NUM_MOTORS;++i) {
             enable[i].num = 0;
             enable[i].type = MOTOR_TYPE_REQ;
-            enable[i].motor = (enable) ? VELOCITY_CONTROL_STATE : DISABLE_CONTROL_STATE;
+            enable[i].motor = (enable) ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
             list_send.push_back(_uNav->createDataPacket(ENABLE_MOTOR, HASHMAP_MOTION, (abstract_message_u*) & enable[i]));
         }
         serial_->parserSendPacket(list_send, 3, boost::posix_time::millisec(200));
@@ -235,7 +235,11 @@ bool MainWindow::sendSetpoint0( double setPoint )
 
     try
     {
-        // TODO: x Raffaello: add the code to send the new speed command to Motor 0
+        motor_control_t motor_ref;
+        motor_ref.num = 0;
+        motor_ref.type = MOTOR_TYPE_REQ;
+        motor_ref.motor = (int16_t) (setPoint*1000); //Convert in millirad/s
+        _uNav->parserSendPacket(_uNav->createDataPacket(VEL_MOTOR, HASHMAP_MOTION, (abstract_message_u*) & motor_ref), 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
     {
@@ -269,7 +273,11 @@ bool MainWindow::sendSetpoint1( double setPoint )
 
     try
     {
-        // TODO
+        motor_control_t motor_ref;
+        motor_ref.num = 1;
+        motor_ref.type = MOTOR_TYPE_REQ;
+        motor_ref.motor = (int16_t) (setPoint*1000); //Convert in millirad/s
+        _uNav->parserSendPacket(_uNav->createDataPacket(VEL_MOTOR, HASHMAP_MOTION, (abstract_message_u*) & motor_ref), 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
     {
@@ -303,7 +311,11 @@ bool MainWindow::sendPIDGains0(double kp, double ki, double kd )
 
     try
     {
-        // TODO: x Raffaello: add the code to send the PID gains to Motor 0
+        pid_control_t pid;
+        pid.kp = kp;
+        pid.ki = ki;
+        pid.kd = kd;
+        _uNav->parserSendPacket(_uNav->createDataPacket(PID_CONTROL_L, HASHMAP_MOTION, (abstract_message_u*) & pid), 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
     {
@@ -337,7 +349,11 @@ bool MainWindow::sendPIDGains1(double kp, double ki, double kd )
 
     try
     {
-        // TODO
+        pid_control_t pid;
+        pid.kp = kp;
+        pid.ki = ki;
+        pid.kd = kd;
+        _uNav->parserSendPacket(_uNav->createDataPacket(PID_CONTROL_R, HASHMAP_MOTION, (abstract_message_u*) & pid), 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
     {
