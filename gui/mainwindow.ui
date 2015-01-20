@@ -6,12 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1064</width>
-    <height>1003</height>
+    <width>1148</width>
+    <height>1055</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>uNav PID Tuner - Officine Robotiche</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/images/ORlogoSimple.png</normaloff>:/images/ORlogoSimple.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_17">
@@ -287,7 +291,10 @@
     <item row="1" column="1" colspan="2">
      <layout class="QGridLayout" name="gridLayout_15">
       <item row="1" column="0">
-       <widget class="QGroupBox" name="groupBox_5">
+       <widget class="QGroupBox" name="groupBox_controls">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
@@ -691,8 +698,8 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>210</width>
-                     <height>125</height>
+                     <width>105</width>
+                     <height>112</height>
                     </size>
                    </property>
                    <property name="maximumSize">
@@ -813,7 +820,10 @@ Motors</string>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QGroupBox" name="groupBox_9">
+       <widget class="QGroupBox" name="groupBox_motor_1">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
           <horstretch>0</horstretch>
@@ -1072,7 +1082,10 @@ Motors</string>
        </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QGroupBox" name="groupBox">
+       <widget class="QGroupBox" name="groupBox_motor_0">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -1332,12 +1345,11 @@ Motors</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1064</width>
+     <width>1148</width>
      <height>25</height>
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

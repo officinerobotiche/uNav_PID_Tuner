@@ -26,6 +26,7 @@ public:
 protected:
     void updateSerialPortList();
     bool connectSerial();
+    void disconnectSerial();
     void initPlots();
     void updatePlots0();
     void updatePlots1();

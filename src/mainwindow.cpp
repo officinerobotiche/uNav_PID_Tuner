@@ -128,13 +128,55 @@ void MainWindow::updateSerialPortList()
 
     foreach( QSerialPortInfo info, serialList)
     {
-        ui->comboBox_serial_port->addItem( info.portName() );
+        ui->comboBox_serial_port->addItem( info.systemLocation() );
     }
 }
 
 void MainWindow::on_pushButton_update_serial_list_clicked()
 {
     updateSerialPortList();
+}
+
+void MainWindow::disconnectSerial()
+{
+    if( !_uNav || !_connected )
+        return;
+
+    try
+    {
+        _uNav->close();
+    }
+    catch( parser_exception& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Disconnection error: %1").arg(e.what());
+
+        throw e;
+        return;
+    }
+    catch( boost::system::system_error& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Disconnection error: %1").arg( e.what() );
+
+        throw e;
+        return;
+    }
+    catch(...)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Disconnection error: Unknown error");
+
+        throw;
+        return;
+    }
+
+    delete _uNav;
+    _uNav = NULL;
+
+    ui->groupBox_motor_0->setEnabled( false );
+    ui->groupBox_motor_1->setEnabled( false );
+    ui->groupBox_controls->setEnabled( false );
+
+    sendEnable( false );
+    _connected = false;
 }
 
 bool MainWindow::connectSerial()
@@ -170,6 +212,11 @@ bool MainWindow::connectSerial()
         return false;
     }
 
+    ui->groupBox_motor_0->setEnabled( true );
+    ui->groupBox_motor_1->setEnabled( true );
+    ui->groupBox_controls->setEnabled( true );
+
+    sendEnable( true );
     _connected = true;
     return true;
 }
@@ -178,6 +225,34 @@ bool MainWindow::stopMotors()
 {
     if( !_connected )
         return false;
+
+    try
+    {
+        // TODO send command to board
+    }
+    catch( parser_exception& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
+
+        throw e;
+        return false;
+    }
+    catch( boost::system::system_error& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
+
+        throw e;
+        return false;
+    }
+    catch(...)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
+
+        throw;
+        return false;
+    }
+
+    return true;
 }
 
 bool MainWindow::sendEnable( bool enable )
@@ -192,21 +267,21 @@ bool MainWindow::sendEnable( bool enable )
     }
     catch( parser_exception& e)
     {
-        qDebug() << tr("Serial error: %1").arg(e.what());
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
 
         throw e;
         return false;
     }
     catch( boost::system::system_error& e)
     {
-        qDebug() << tr("Serial error: %1").arg( e.what() );
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
 
         throw e;
         return false;
     }
     catch(...)
     {
-        qDebug() << tr("Serial error: Unknown error");
+        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
 
         throw;
         return false;
@@ -219,12 +294,68 @@ bool MainWindow::sendSetpoint0( double setPoint )
 {
     if( !_connected )
         return false;
+
+    try
+    {
+        // TODO send command to board
+    }
+    catch( parser_exception& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
+
+        throw e;
+        return false;
+    }
+    catch( boost::system::system_error& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
+
+        throw e;
+        return false;
+    }
+    catch(...)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
+
+        throw;
+        return false;
+    }
+
+    return true;
 }
 
 bool MainWindow::sendSetpoint1( double setPoint )
 {
     if( !_connected )
         return false;
+
+    try
+    {
+        // TODO send command to board
+    }
+    catch( parser_exception& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
+
+        throw e;
+        return false;
+    }
+    catch( boost::system::system_error& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
+
+        throw e;
+        return false;
+    }
+    catch(...)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
+
+        throw;
+        return false;
+    }
+
+    return true;
 }
 
 void MainWindow::on_pushButton_connect_clicked(bool checked)
@@ -260,6 +391,10 @@ void MainWindow::on_pushButton_connect_clicked(bool checked)
         }
 
         ui->pushButton_connect->setText( tr("Disconnect") );
+    }
+    else
+    {
+
     }
 }
 
@@ -345,19 +480,21 @@ void MainWindow::onSetPointUpdateTimerTimeout()
     {
         updatePlots0();
 
-        // TODO send setPoint to uNav
+        sendSetpoint0( setPoint );
     }
 
     if( ui->checkBox_enable_1->isChecked() )
     {
         updatePlots1();
 
-        // TODO send setPoint to uNav
+        sendSetpoint1( setPoint );
     }
 }
 
 void MainWindow::on_pushButton_set_dynamic_setpoint_clicked()
 {
+    _setPointUpdateTimer.stop();
+
     _curr_time_msec = 0;
     _setPointUpdateTimer.setTimerType( Qt::PreciseTimer );
 
@@ -380,6 +517,8 @@ void MainWindow::on_pushButton_set_dynamic_setpoint_clicked()
 
 void MainWindow::on_pushButton_set_fixed_setpoint_clicked()
 {
+    _setPointUpdateTimer.stop();
+
     _setPoint_fixed = ui->lineEdit_fixed_setpoint->text().toDouble();
 
     _current_value0 = 0.0;
@@ -497,9 +636,7 @@ void MainWindow::on_pushButton_reset_clicked()
 
 void MainWindow::on_pushButton_stop_motors_clicked()
 {
+    _setPointUpdateTimer.stop();
+
     stopMotors();
-
-    sendEnable( false );
-
-
 }
