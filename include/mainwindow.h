@@ -38,6 +38,9 @@ protected:
     bool sendSetpoint1( double setPoint );
     bool sendPIDGains0(double kp, double ki, double kd );
     bool sendPIDGains1( double kp, double ki, double kd );
+    bool sendParams( int motIdx);
+    bool sendMotorParams(int motIdx, float k_vel, float k_ang, int8_t versus, uint8_t enable_mode);
+    bool requestStatus(int motIdx);
     // <<<<< Motor commands
 
 private slots:
@@ -55,6 +58,14 @@ private slots:
     void on_checkBox_enable_0_clicked(bool checked);
 
     void on_checkBox_enable_1_clicked(bool checked);
+
+    void on_checkBox_enable_mode_clicked();
+
+    void on_checkBox_invert_mot_0_clicked();
+
+    void on_checkBox_invert_mot_1_clicked();
+
+    void on_pushButton_send_params_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -91,6 +102,10 @@ private:
 
     double _current_value0;
     double _current_value1;
+    double _current_setPoint0;
+    double _current_setPoint1;
+    double _current_error0;
+    double _current_error1;
 
     QTimer _setPointUpdateTimer;
     QTime _timer;

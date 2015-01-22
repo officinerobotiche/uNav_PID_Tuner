@@ -142,11 +142,11 @@ void MainWindow::disconnectSerial()
     if( !_uNav || !_connected )
         return;
 
-
     try
     {
         sendEnable(0, false );
         sendEnable(1, false );
+
         _uNav->close();
     }
     catch( parser_exception& e)
@@ -230,6 +230,9 @@ bool MainWindow::connectSerial()
     else
         sendEnable(1, false );
 
+    sendParams( 0 );
+    sendParams( 1 );
+
     return true;
 }
 
@@ -240,7 +243,14 @@ bool MainWindow::stopMotors()
 
     try
     {
-        // TODO send command to board
+        motor_control_t motor_ref = (int16_t) 0; //Convert in millirad/s
+
+        std::vector<information_packet_t> list_send;
+
+        list_send.push_back( _uNav->createDataPacket(VEL_MOTOR_L, HASHMAP_MOTION, (abstract_message_u*) & motor_ref) );
+        list_send.push_back( _uNav->createDataPacket(VEL_MOTOR_R, HASHMAP_MOTION, (abstract_message_u*) & motor_ref) );
+
+        _uNav->parserSendPacket( list_send, 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
     {
@@ -274,19 +284,9 @@ bool MainWindow::sendEnable(int motIdx, bool enable )
 
     try
     {
-        std::vector<information_packet_t> list_send;
-
-        /*motor_control_t enable_left = enable ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
-        motor_control_t enable_right = enable ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
-
-        list_send.push_back( _uNav->createDataPacket(ENABLE_MOTOR_L, HASHMAP_MOTION, (abstract_message_u*) & enable_left) );
-        list_send.push_back( _uNav->createDataPacket(ENABLE_MOTOR_R, HASHMAP_MOTION, (abstract_message_u*) & enable_right) );
-
-        _uNav->parserSendPacket( list_send, 3, boost::posix_time::millisec(200));*/
-
         motor_control_t enable_val = enable ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
 
-        unsigned char command;
+        quint8 command;
         if(motIdx==0)
             command = ENABLE_MOTOR_L;
         else
@@ -322,7 +322,7 @@ bool MainWindow::sendEnable(int motIdx, bool enable )
 bool MainWindow::sendSetpoint0( double setPoint )
 {
     if( !_connected )
-        return false;    
+        return false;
 
     try
     {
@@ -467,6 +467,147 @@ bool MainWindow::sendPIDGains1(double kp, double ki, double kd )
     return true;
 }
 
+bool MainWindow::sendParams( int motIdx )
+{
+    float k_vel = ui->lineEdit_k_vel->text().toFloat();
+    float k_ang = ui->lineEdit_k_ang->text().toFloat();
+
+    int8_t versus = 1;
+
+    if(motIdx==0)
+        versus = ui->checkBox_invert_mot_0->isChecked()?-1:1;
+    else
+        versus = ui->checkBox_invert_mot_1->isChecked()?-1:1;
+
+    uint8_t enable_mode = ui->checkBox_enable_mode->isChecked()?1:0;
+
+    return sendMotorParams( motIdx, k_vel, k_ang, versus, enable_mode );
+}
+
+bool MainWindow::requestStatus(int motIdx)
+{
+    if( !_connected )
+        return false;
+
+    try
+    {
+        motor_t motorStatus;
+
+        quint8 command;
+        if(motIdx==0)
+            command = MOTOR_L;
+        else
+            command = MOTOR_R;
+
+        information_packet_t send = _uNav->createPacket( MOTOR_L, REQUEST, HASHMAP_MOTION);
+        packet_t received = _uNav->sendSyncPacket( _uNav->encoder(send), 3, boost::posix_time::millisec(200) );
+
+        // parse packet
+        vector<information_packet_t> list = _uNav->parsing(received);
+        //get first packet
+        information_packet_t first = list.at(0);
+
+        if(first.option == DATA)
+        {
+            if(first.type == HASHMAP_MOTION)
+            {
+                motor_t motor0, motor1;
+
+                switch(first.command)
+                {
+                case MOTOR_L:
+                    motor0 = first.packet.motor;
+
+                    _current_value0 = ((double)motor0.measure_vel)/1000.0;
+                    _current_setPoint0 = ((double)motor0.refer_vel)/1000.0;
+                    _current_error0 = _current_setPoint0-_current_value0;
+
+                    break;
+                case MOTOR_R:
+                    motor1 = first.packet.motor;
+
+                    _current_value1 = ((double)motor1.measure_vel)/1000.0;
+                    _current_setPoint1 = ((double)motor1.refer_vel)/1000.0;
+                    _current_error1 = _current_setPoint1-_current_value1;
+
+                    break;
+                }
+            }
+        }
+
+    }
+    catch( parser_exception& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
+
+        throw e;
+        return false;
+    }
+    catch( boost::system::system_error& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
+
+        throw e;
+        return false;
+    }
+    catch(...)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
+
+        throw;
+        return false;
+    }
+
+    return true;
+}
+
+bool MainWindow::sendMotorParams(int motIdx, float k_vel, float k_ang,
+                                 int8_t versus, uint8_t enable_mode )
+{
+    if( !_connected )
+        return false;
+
+    try
+    {
+        parameter_motor_t param;
+        param.enable_set = enable_mode;
+        param.k_ang = k_ang;
+        param.k_vel = k_vel;
+        param.versus = versus;
+
+        quint8 command;
+        if(motIdx==0)
+            command = PARAMETER_MOTOR_L;
+        else
+            command = PARAMETER_MOTOR_R;
+
+        _uNav->parserSendPacket(_uNav->createDataPacket(command, HASHMAP_MOTION, (abstract_message_u*) & param), 3, boost::posix_time::millisec(200));
+    }
+    catch( parser_exception& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
+
+        throw e;
+        return false;
+    }
+    catch( boost::system::system_error& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
+
+        throw e;
+        return false;
+    }
+    catch(...)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
+
+        throw;
+        return false;
+    }
+
+    return true;
+}
+
 void MainWindow::on_pushButton_connect_clicked(bool checked)
 {
     if( checked )
@@ -503,7 +644,30 @@ void MainWindow::on_pushButton_connect_clicked(bool checked)
     }
     else
     {
+        try
+        {
+            disconnectSerial();
+        }
+        catch( parser_exception& e)
+        {
+            ui->pushButton_connect->setChecked(false);
+            QMessageBox::warning( this, tr("Connection error"), e.what() );
+            return;
+        }
+        catch( boost::system::system_error& e)
+        {
+            ui->pushButton_connect->setChecked(false);
+            QMessageBox::warning( this, tr("Connection error"), e.what() );
+            return;
+        }
+        catch(...)
+        {
+            ui->pushButton_connect->setChecked(false);
+            QMessageBox::warning( this, tr("Connection error"), tr("Unknown error") );
+            return;
+        }
 
+        ui->pushButton_connect->setText( tr("Connect") );
     }
 }
 
@@ -572,39 +736,44 @@ void MainWindow::onSetPointUpdateTimerTimeout()
         }
     }
 
-    double error0 = setPoint - _current_value0;
-    double error1 = setPoint - _current_value1;
-
-    _setPointVec0 << setPoint;
-    _setPointVec1 << setPoint;
-    _timeVec0 << _curr_time_msec;
-    _timeVec1 << _curr_time_msec;
-    _currMotorValVec0 << _current_value0;
-    _currMotorValVec1 << _current_value1;
-    _errorVec0 << error0;
-    _errorVec1 << error1;
-
-    ui->lcdNumber_value_0->display( _current_value0 );
-    ui->lcdNumber_value_1->display( _current_value1 );
-
-    ui->lcdNumber_setpoint_0->display( setPoint );
-    ui->lcdNumber_setpoint_1->display( setPoint );
-
-    ui->lcdNumber_error_0->display( error0 );
-    ui->lcdNumber_error_1->display( error1 );
-
     if( ui->checkBox_enable_0->isChecked() )
     {
-        updatePlots0();
+        if(!sendSetpoint0( setPoint ) )
+            return;
 
-        sendSetpoint0( setPoint );
+        if( !requestStatus( 0 ) )
+            return;
+
+        _setPointVec0 << _current_setPoint0;
+        _timeVec0 << _curr_time_msec;
+        _currMotorValVec0 << _current_value0;
+        _errorVec0 << _current_error0;
+
+        ui->lcdNumber_value_0->display( _current_value0 );
+        ui->lcdNumber_setpoint_0->display( _current_setPoint0 );
+        ui->lcdNumber_error_0->display( _current_error0 );
+
+        updatePlots0();
     }
 
     if( ui->checkBox_enable_1->isChecked() )
     {
-        updatePlots1();
+        if(!sendSetpoint1( setPoint ) )
+            return;
 
-        sendSetpoint1( setPoint );
+        if( !requestStatus( 1 ) )
+            return;
+
+        _setPointVec1 << _current_setPoint1;
+        _timeVec1 << _curr_time_msec;
+        _currMotorValVec1 << _current_value1;
+        _errorVec1 << _current_error1;
+
+        ui->lcdNumber_value_1->display( _current_value1 );
+        ui->lcdNumber_setpoint_1->display( _current_setPoint1 );
+        ui->lcdNumber_error_1->display( _current_error1 );
+
+        updatePlots1();
     }
 }
 
@@ -770,4 +939,26 @@ void MainWindow::on_checkBox_enable_0_clicked(bool checked)
 void MainWindow::on_checkBox_enable_1_clicked(bool checked)
 {
     sendEnable(1,checked);
+}
+
+void MainWindow::on_checkBox_enable_mode_clicked()
+{
+    sendParams( 0 );
+    sendParams( 1 );
+}
+
+void MainWindow::on_checkBox_invert_mot_0_clicked()
+{
+    sendParams( 0 );
+}
+
+void MainWindow::on_checkBox_invert_mot_1_clicked()
+{
+    sendParams( 1 );
+}
+
+void MainWindow::on_pushButton_send_params_clicked()
+{
+    sendParams( 0 );
+    sendParams( 1 );
 }
