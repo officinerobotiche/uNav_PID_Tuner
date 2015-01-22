@@ -33,7 +33,7 @@ protected:
 
     // >>>>> Motor commands
     bool stopMotors();
-    bool sendEnable(bool sendEnable=true);
+    bool sendEnable(int motIdx, bool sendEnable=true);
     bool sendSetpoint0( double setPoint );
     bool sendSetpoint1( double setPoint );
     bool sendPIDGains0(double kp, double ki, double kd );
@@ -51,6 +51,10 @@ private slots:
     void on_pushButton_stop_motors_clicked();
 
     void onSetPointUpdateTimerTimeout();
+
+    void on_checkBox_enable_0_clicked(bool checked);
+
+    void on_checkBox_enable_1_clicked(bool checked);
 
 private:
     Ui::MainWindow *ui;

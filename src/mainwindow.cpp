@@ -142,8 +142,11 @@ void MainWindow::disconnectSerial()
     if( !_uNav || !_connected )
         return;
 
+
     try
     {
+        sendEnable(0, false );
+        sendEnable(1, false );
         _uNav->close();
     }
     catch( parser_exception& e)
@@ -175,7 +178,6 @@ void MainWindow::disconnectSerial()
     ui->groupBox_motor_1->setEnabled( false );
     ui->groupBox_controls->setEnabled( false );
 
-    sendEnable( false );
     _connected = false;
 }
 
@@ -216,8 +218,18 @@ bool MainWindow::connectSerial()
     ui->groupBox_motor_1->setEnabled( true );
     ui->groupBox_controls->setEnabled( true );
 
-    sendEnable( true );
     _connected = true;
+
+    if( ui->checkBox_enable_0->isChecked() )
+        sendEnable(0, true );
+    else
+        sendEnable(0, false );
+
+    if( ui->checkBox_enable_1->isChecked() )
+        sendEnable(1, true );
+    else
+        sendEnable(1, false );
+
     return true;
 }
 
@@ -255,7 +267,7 @@ bool MainWindow::stopMotors()
     return true;
 }
 
-bool MainWindow::sendEnable( bool enable )
+bool MainWindow::sendEnable(int motIdx, bool enable )
 {
     if( !_connected )
         return false;
@@ -264,13 +276,23 @@ bool MainWindow::sendEnable( bool enable )
     {
         std::vector<information_packet_t> list_send;
 
-        motor_control_t enable_left = enable ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
+        /*motor_control_t enable_left = enable ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
         motor_control_t enable_right = enable ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
 
         list_send.push_back( _uNav->createDataPacket(ENABLE_MOTOR_L, HASHMAP_MOTION, (abstract_message_u*) & enable_left) );
         list_send.push_back( _uNav->createDataPacket(ENABLE_MOTOR_R, HASHMAP_MOTION, (abstract_message_u*) & enable_right) );
 
-        _uNav->parserSendPacket( list_send, 3, boost::posix_time::millisec(200));
+        _uNav->parserSendPacket( list_send, 3, boost::posix_time::millisec(200));*/
+
+        motor_control_t enable_val = enable ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
+
+        unsigned char command;
+        if(motIdx==0)
+            command = ENABLE_MOTOR_L;
+        else
+            command = ENABLE_MOTOR_R;
+
+        _uNav->parserSendPacket( _uNav->createDataPacket( command, HASHMAP_MOTION, (abstract_message_u*)&enable_val ) );
     }
     catch( parser_exception& e)
     {
@@ -487,9 +509,6 @@ void MainWindow::on_pushButton_connect_clicked(bool checked)
 
 void MainWindow::on_pushButton_send_gains_0_clicked()
 {
-    if( !_connected )
-        return;
-
     double kp = ui->doubleSpinBox_kp_0->text().toDouble();
     double ki = ui->doubleSpinBox_ki_0->text().toDouble();
     double kd = ui->doubleSpinBox_kd_0->text().toDouble();
@@ -499,9 +518,6 @@ void MainWindow::on_pushButton_send_gains_0_clicked()
 
 void MainWindow::on_pushButton_send_gains_1_clicked()
 {
-    if( !_connected )
-        return;
-
     double kp = ui->doubleSpinBox_kp_1->text().toDouble();
     double ki = ui->doubleSpinBox_ki_1->text().toDouble();
     double kd = ui->doubleSpinBox_kd_1->text().toDouble();
@@ -614,7 +630,11 @@ void MainWindow::on_pushButton_set_dynamic_setpoint_clicked()
 
     _timer.start();
     _setPointUpdateTimer.start( _updateTimeMsec );
+
+    ui->widget_plot_data_0->yAxis->setRange( _setPoint_dyn_down*1.1, _setPoint_dyn_up*1.1 );
+    ui->widget_plot_data_1->yAxis->setRange( _setPoint_dyn_down*1.1, _setPoint_dyn_up*1.1 );
 }
+
 
 void MainWindow::on_pushButton_set_fixed_setpoint_clicked()
 {
@@ -663,8 +683,8 @@ void MainWindow::updatePlots0()
     ui->widget_plot_data_0->graph(1)->removeDataBefore( (qreal)time-_graphRange0 );
     ui->widget_plot_error_0->graph(0)->removeDataBefore( (qreal)time-_graphRange0 );
 
-    ui->widget_plot_data_0->graph(0)->rescaleValueAxis(true);
-    ui->widget_plot_data_0->graph(1)->rescaleValueAxis(true);
+    //ui->widget_plot_data_0->graph(0)->rescaleValueAxis(true);
+    //ui->widget_plot_data_0->graph(1)->rescaleValueAxis(true);
     ui->widget_plot_error_0->graph(0)->rescaleValueAxis(true);
 
     ui->widget_plot_data_0->xAxis->setRange( time+_updateTimeMsec*2, _graphRange0, Qt::AlignRight);
@@ -708,8 +728,8 @@ void MainWindow::updatePlots1()
     ui->widget_plot_data_1->graph(1)->removeDataBefore( (double)time-_graphRange1 );
     ui->widget_plot_error_1->graph(0)->removeDataBefore( (double)time-_graphRange1 );
 
-    ui->widget_plot_data_1->graph(0)->rescaleValueAxis(true);
-    ui->widget_plot_data_1->graph(1)->rescaleValueAxis(true);
+    //ui->widget_plot_data_1->graph(0)->rescaleValueAxis(true);
+    //ui->widget_plot_data_1->graph(1)->rescaleValueAxis(true);
     ui->widget_plot_error_1->graph(0)->rescaleValueAxis(true);
 
     ui->widget_plot_data_1->xAxis->setRange( time+_updateTimeMsec*2, _graphRange1, Qt::AlignRight);
@@ -740,4 +760,14 @@ void MainWindow::on_pushButton_stop_motors_clicked()
     _setPointUpdateTimer.stop();
 
     stopMotors();
+}
+
+void MainWindow::on_checkBox_enable_0_clicked(bool checked)
+{
+    sendEnable(0,checked);
+}
+
+void MainWindow::on_checkBox_enable_1_clicked(bool checked)
+{
+    sendEnable(1,checked);
 }
