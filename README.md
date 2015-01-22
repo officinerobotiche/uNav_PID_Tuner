@@ -1,6 +1,8 @@
 # uNav_PID_Tuner
 Software to tune the PID control on the uNav board
 
+![pidtuner_2015-01-16 00-29-09](https://cloud.githubusercontent.com/assets/3648617/5839679/18edc6de-a190-11e4-81e4-3bd339372c3c.png)
+
 ## Dependencies
 Boost:
 ```shell
