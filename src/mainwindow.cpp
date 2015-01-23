@@ -33,6 +33,23 @@ MainWindow::MainWindow(QWidget *parent) :
              this, SLOT(onSetPointUpdateTimerTimeout()) );
 
     _connected = false;
+
+    _current_value0=0.0;
+    _current_value1=0.0;
+    _current_setPoint0=0.0;
+    _current_setPoint1=0.0;
+    _current_error0=0.0;
+    _current_error1=0.0;
+
+    ui->lcdNumber_value_0->display( tr("%1").arg(_current_value0, 6,'f', 3) );
+    ui->lcdNumber_setpoint_0->display( tr("%1").arg(_current_setPoint0, 6,'f', 3) );
+    ui->lcdNumber_error_0->display( tr("%1").arg(_current_error0, 6,'f', 3) );
+
+    ui->lcdNumber_value_1->display( tr("%1").arg(_current_value1, 6,'f', 3) );
+    ui->lcdNumber_setpoint_1->display( tr("%1").arg(_current_setPoint1, 6,'f', 3) );
+    ui->lcdNumber_error_1->display( tr("%1").arg(_current_error0, 1,'f', 3) );
+
+    _enablePolarity = ui->checkBox_enable_mode->isChecked()?1:0;
 }
 
 MainWindow::~MainWindow()
@@ -220,6 +237,9 @@ bool MainWindow::connectSerial()
 
     _connected = true;
 
+    sendParams( 0 );
+    sendParams( 1 );
+
     if( ui->checkBox_enable_0->isChecked() )
         sendEnable(0, true );
     else
@@ -230,8 +250,8 @@ bool MainWindow::connectSerial()
     else
         sendEnable(1, false );
 
-    sendParams( 0 );
-    sendParams( 1 );
+    requestPidGains(0);
+    requestPidGains(1);
 
     return true;
 }
@@ -389,7 +409,7 @@ bool MainWindow::sendSetpoint1( double setPoint )
     return true;
 }
 
-bool MainWindow::sendPIDGains0(double kp, double ki, double kd )
+bool MainWindow::sendPIDGains0(float kp, float ki, float kd )
 {
     if( !_connected )
         return false;
@@ -428,7 +448,7 @@ bool MainWindow::sendPIDGains0(double kp, double ki, double kd )
     return true;
 }
 
-bool MainWindow::sendPIDGains1(double kp, double ki, double kd )
+bool MainWindow::sendPIDGains1(float kp, float ki, float kd )
 {
     if( !_connected )
         return false;
@@ -479,9 +499,83 @@ bool MainWindow::sendParams( int motIdx )
     else
         versus = ui->checkBox_invert_mot_1->isChecked()?-1:1;
 
-    uint8_t enable_mode = ui->checkBox_enable_mode->isChecked()?1:0;
+    _enablePolarity = ui->checkBox_enable_mode->isChecked()?1:0;
 
-    return sendMotorParams( motIdx, k_vel, k_ang, versus, enable_mode );
+    return sendMotorParams( motIdx, k_vel, k_ang, versus, _enablePolarity );
+}
+
+bool MainWindow::requestPidGains( int motIdx )
+{
+    if( !_connected )
+        return false;
+
+    try
+    {
+        quint8 command=PID_CONTROL_L;
+        if(motIdx==0)
+            command = PID_CONTROL_L;
+        else
+            command = PID_CONTROL_R;
+
+        information_packet_t send = _uNav->createPacket( command, REQUEST, HASHMAP_MOTION);
+        packet_t received = _uNav->sendSyncPacket( _uNav->encoder(send), 3, boost::posix_time::millisec(200) );
+
+        // parse packet
+        vector<information_packet_t> list = _uNav->parsing(received);
+        //get first packet
+        information_packet_t first = list.at(0);
+
+        if(first.option == DATA)
+        {
+            if(first.type == HASHMAP_MOTION)
+            {
+                pid_control_t pid0, pid1;
+
+                switch(first.command)
+                {
+                case PID_CONTROL_L:
+                    pid0 = first.packet.pid;
+
+                    ui->doubleSpinBox_kp_0->setValue( pid0.kp);
+                    ui->doubleSpinBox_ki_0->setValue( pid0.ki);
+                    ui->doubleSpinBox_kd_0->setValue( pid0.kd);
+
+                    break;
+                case PID_CONTROL_R:
+                    pid1 = first.packet.pid;
+
+                    ui->doubleSpinBox_kp_1->setValue( pid1.kp);
+                    ui->doubleSpinBox_ki_1->setValue( pid1.ki);
+                    ui->doubleSpinBox_kd_1->setValue( pid1.kd);
+                    break;
+                }
+            }
+        }
+
+    }
+    catch( parser_exception& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
+
+        throw e;
+        return false;
+    }
+    catch( boost::system::system_error& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
+
+        throw e;
+        return false;
+    }
+    catch(...)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
+
+        throw;
+        return false;
+    }
+
+    return true;
 }
 
 bool MainWindow::requestStatus(int motIdx)
@@ -491,15 +585,13 @@ bool MainWindow::requestStatus(int motIdx)
 
     try
     {
-        motor_t motorStatus;
-
-        quint8 command;
+        quint8 command=MOTOR_L;
         if(motIdx==0)
             command = MOTOR_L;
         else
             command = MOTOR_R;
 
-        information_packet_t send = _uNav->createPacket( MOTOR_L, REQUEST, HASHMAP_MOTION);
+        information_packet_t send = _uNav->createPacket( command, REQUEST, HASHMAP_MOTION);
         packet_t received = _uNav->sendSyncPacket( _uNav->encoder(send), 3, boost::posix_time::millisec(200) );
 
         // parse packet
@@ -680,6 +772,16 @@ void MainWindow::on_pushButton_send_gains_0_clicked()
     sendPIDGains0( kp, ki, kd );
 }
 
+void MainWindow::on_pushButton_get_gains_0_clicked()
+{
+    requestPidGains(0);
+}
+
+void MainWindow::on_pushButton_get_gains_1_clicked()
+{
+    requestPidGains(1);
+}
+
 void MainWindow::on_pushButton_send_gains_1_clicked()
 {
     double kp = ui->doubleSpinBox_kp_1->text().toDouble();
@@ -749,9 +851,9 @@ void MainWindow::onSetPointUpdateTimerTimeout()
         _currMotorValVec0 << _current_value0;
         _errorVec0 << _current_error0;
 
-        ui->lcdNumber_value_0->display( _current_value0 );
-        ui->lcdNumber_setpoint_0->display( _current_setPoint0 );
-        ui->lcdNumber_error_0->display( _current_error0 );
+        ui->lcdNumber_value_0->display( tr("%1").arg(_current_value0,6,'f', 3) );
+        ui->lcdNumber_setpoint_0->display( tr("%1").arg(_current_setPoint0,6,'f', 3) );
+        ui->lcdNumber_error_0->display( tr("%1").arg(_current_error0,6,'f', 3) );
 
         updatePlots0();
     }
@@ -769,9 +871,9 @@ void MainWindow::onSetPointUpdateTimerTimeout()
         _currMotorValVec1 << _current_value1;
         _errorVec1 << _current_error1;
 
-        ui->lcdNumber_value_1->display( _current_value1 );
-        ui->lcdNumber_setpoint_1->display( _current_setPoint1 );
-        ui->lcdNumber_error_1->display( _current_error1 );
+        ui->lcdNumber_value_1->display( tr("%1").arg(_current_value1,6,'f', 3) );
+        ui->lcdNumber_setpoint_1->display( tr("%1").arg(_current_setPoint1,6,'f', 3) );
+        ui->lcdNumber_error_1->display( tr("%1").arg(_current_error1,6,'f', 3) );
 
         updatePlots1();
     }
@@ -962,3 +1064,5 @@ void MainWindow::on_pushButton_send_params_clicked()
     sendParams( 0 );
     sendParams( 1 );
 }
+
+

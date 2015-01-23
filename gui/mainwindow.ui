@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
-    <height>1144</height>
+    <width>1182</width>
+    <height>1041</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,13 +18,117 @@
     <normaloff>:/images/ORlogoSimple.png</normaloff>:/images/ORlogoSimple.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout_17">
+   <layout class="QGridLayout" name="gridLayout_5">
+    <item row="0" column="0" colspan="2">
+     <layout class="QHBoxLayout" name="horizontalLayout_25">
+      <item>
+       <widget class="QGroupBox" name="groupBox_17">
+        <property name="title">
+         <string>Connection</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_18">
+         <item row="0" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_11">
+           <item>
+            <widget class="QLabel" name="label_7">
+             <property name="text">
+              <string>Serial Port</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="comboBox_serial_port">
+             <property name="minimumSize">
+              <size>
+               <width>200</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_update_serial_list">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>List Update</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_connect">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Connect</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Preferred</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_6">
+        <property name="title">
+         <string>Plots</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="0">
+          <widget class="QPushButton" name="pushButton_reset">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Reset</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
     <item row="1" column="0">
      <layout class="QGridLayout" name="gridLayout_16">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
       <item row="0" column="0">
-       <widget class="QGroupBox" name="groupBox_2">
+       <widget class="QGroupBox" name="groupBox_plot_0">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+         <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -109,7 +213,7 @@
             <item row="0" column="0">
              <widget class="QCustomPlot" name="widget_plot_error_0" native="true">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -123,9 +227,9 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QGroupBox" name="groupBox_13">
+       <widget class="QGroupBox" name="groupBox_plot_1">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+         <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -173,7 +277,7 @@
             <item row="0" column="0">
              <widget class="QCustomPlot" name="widget_plot_data_1" native="true">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+               <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -210,7 +314,7 @@
             <item row="0" column="0">
              <widget class="QCustomPlot" name="widget_plot_error_1" native="true">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+               <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -225,70 +329,7 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="0" colspan="2">
-     <widget class="QGroupBox" name="groupBox_17">
-      <property name="title">
-       <string>Connection</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_18">
-       <item row="0" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_11">
-         <item>
-          <widget class="QLabel" name="label_7">
-           <property name="text">
-            <string>Serial Port</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="comboBox_serial_port">
-           <property name="minimumSize">
-            <size>
-             <width>200</width>
-             <height>0</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_update_serial_list">
-           <property name="text">
-            <string>List Update</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_connect">
-           <property name="text">
-            <string>Connect</string>
-           </property>
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="0" column="2">
-     <widget class="QGroupBox" name="groupBox_6">
-      <property name="title">
-       <string>Plots</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_4">
-       <item row="0" column="0">
-        <widget class="QPushButton" name="pushButton_reset">
-         <property name="text">
-          <string>Reset</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="1" column="1" colspan="2">
+    <item row="1" column="1">
      <layout class="QGridLayout" name="gridLayout_15">
       <item row="1" column="0">
        <widget class="QGroupBox" name="groupBox_controls">
@@ -307,12 +348,36 @@
         <layout class="QGridLayout" name="gridLayout_19">
          <item row="0" column="3">
           <widget class="QGroupBox" name="groupBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="title">
             <string>Rotation versus</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_6">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
+             <number>5</number>
+            </property>
             <item>
              <widget class="QCheckBox" name="checkBox_invert_mot_0">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string>Invert Mot 0</string>
               </property>
@@ -320,6 +385,12 @@
             </item>
             <item>
              <widget class="QCheckBox" name="checkBox_invert_mot_1">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string>Invert Mot 1</string>
               </property>
@@ -358,7 +429,7 @@
             <item>
              <widget class="QCheckBox" name="checkBox_enable_0">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -374,7 +445,7 @@
             <item>
              <widget class="QCheckBox" name="checkBox_enable_1">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -389,11 +460,17 @@
             </item>
             <item>
              <widget class="QCheckBox" name="checkBox_enable_mode">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
-               <string>Enable active high</string>
+               <string>Enable active HIGH</string>
               </property>
               <property name="checked">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -402,10 +479,28 @@
          </item>
          <item row="0" column="4">
           <widget class="QGroupBox" name="groupBox_5">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="title">
             <string>Parameters</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_9">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
+             <number>5</number>
+            </property>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_23">
               <item>
@@ -417,6 +512,12 @@
               </item>
               <item>
                <widget class="QLineEdit" name="lineEdit_k_vel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string>34278152.248661</string>
                 </property>
@@ -435,6 +536,12 @@
               </item>
               <item>
                <widget class="QLineEdit" name="lineEdit_k_ang">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string>0.000214</string>
                 </property>
@@ -451,6 +558,12 @@
             </item>
             <item>
              <widget class="QPushButton" name="pushButton_send_params">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string>Send</string>
               </property>
@@ -462,7 +575,7 @@
          <item row="0" column="0">
           <widget class="QPushButton" name="pushButton_stop_motors">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+            <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -859,21 +972,21 @@ Motors</string>
                  <item row="5" column="1" colspan="2">
                   <widget class="QLabel" name="label_15">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Maximum" vsizetype="MinimumExpanding">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>105</width>
-                     <height>112</height>
+                     <width>80</width>
+                     <height>70</height>
                     </size>
                    </property>
                    <property name="maximumSize">
                     <size>
-                     <width>16777215</width>
-                     <height>16777215</height>
+                     <width>350</width>
+                     <height>180</height>
                     </size>
                    </property>
                    <property name="text">
@@ -1055,7 +1168,7 @@ Motors</string>
              <item>
               <widget class="QLCDNumber" name="lcdNumber_value_1">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -1063,7 +1176,7 @@ Motors</string>
                <property name="minimumSize">
                 <size>
                  <width>200</width>
-                 <height>40</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -1088,7 +1201,7 @@ Motors</string>
              <item>
               <widget class="QLCDNumber" name="lcdNumber_setpoint_1">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -1096,7 +1209,7 @@ Motors</string>
                <property name="minimumSize">
                 <size>
                  <width>200</width>
-                 <height>40</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -1121,7 +1234,7 @@ Motors</string>
              <item>
               <widget class="QLCDNumber" name="lcdNumber_error_1">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -1129,7 +1242,7 @@ Motors</string>
                <property name="minimumSize">
                 <size>
                  <width>200</width>
-                 <height>40</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -1145,17 +1258,34 @@ Motors</string>
           </layout>
          </item>
          <item row="0" column="1">
-          <widget class="QPushButton" name="pushButton_send_gains_1">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Set</string>
-           </property>
-          </widget>
+          <layout class="QVBoxLayout" name="verticalLayout_11">
+           <item>
+            <widget class="QPushButton" name="pushButton_send_gains_1">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Set</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_get_gains_1">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Get</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
@@ -1175,6 +1305,9 @@ Motors</string>
          <string>Motor 0</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_7">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetDefaultConstraint</enum>
+         </property>
          <item row="0" column="2">
           <layout class="QVBoxLayout" name="verticalLayout_8">
            <item>
@@ -1189,7 +1322,7 @@ Motors</string>
              <item>
               <widget class="QLCDNumber" name="lcdNumber_value_0">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -1197,7 +1330,7 @@ Motors</string>
                <property name="minimumSize">
                 <size>
                  <width>200</width>
-                 <height>40</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -1222,7 +1355,7 @@ Motors</string>
              <item>
               <widget class="QLCDNumber" name="lcdNumber_setpoint_0">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -1230,7 +1363,7 @@ Motors</string>
                <property name="minimumSize">
                 <size>
                  <width>200</width>
-                 <height>40</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -1255,7 +1388,7 @@ Motors</string>
              <item>
               <widget class="QLCDNumber" name="lcdNumber_error_0">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -1263,7 +1396,7 @@ Motors</string>
                <property name="minimumSize">
                 <size>
                  <width>200</width>
-                 <height>40</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -1400,17 +1533,34 @@ Motors</string>
           </layout>
          </item>
          <item row="0" column="1">
-          <widget class="QPushButton" name="pushButton_send_gains_0">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Set</string>
-           </property>
-          </widget>
+          <layout class="QVBoxLayout" name="verticalLayout_10">
+           <item>
+            <widget class="QPushButton" name="pushButton_send_gains_0">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Set</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_get_gains_0">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Get</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
@@ -1424,7 +1574,7 @@ Motors</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1200</width>
+     <width>1182</width>
      <height>25</height>
     </rect>
    </property>
