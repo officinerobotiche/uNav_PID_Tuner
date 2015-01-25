@@ -550,9 +550,9 @@
              </layout>
             </item>
             <item>
-             <widget class="QLabel" name="label_24">
+             <widget class="QPushButton" name="pushButton_calculate_k_params">
               <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Use &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;RobotParamCalculator&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;&amp;quot;&lt;br/&gt;to calculate&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Calculate</string>
               </property>
              </widget>
             </item>

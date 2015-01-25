@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "robotparamscalculatedialog.h"
 
 #include <QtSerialPort/QSerialPortInfo>
 #include <QList>
@@ -50,6 +51,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lcdNumber_error_1->display( tr("%1").arg(_current_error0, 1,'f', 3) );
 
     _enablePolarity = ui->checkBox_enable_mode->isChecked()?1:0;
+
+    ui->widget_plot_data_0->setInteraction( QCP::iRangeDrag, true );
+    ui->widget_plot_data_0->setInteraction( QCP::iRangeZoom, true );
+    ui->widget_plot_error_0->setInteraction( QCP::iRangeDrag, true );
+    ui->widget_plot_error_0->setInteraction( QCP::iRangeZoom, true );
+
+    ui->widget_plot_data_1->setInteraction( QCP::iRangeDrag, true );
+    ui->widget_plot_data_1->setInteraction( QCP::iRangeZoom, true );
+    ui->widget_plot_error_1->setInteraction( QCP::iRangeDrag, true );
+    ui->widget_plot_error_1->setInteraction( QCP::iRangeZoom, true );
 }
 
 MainWindow::~MainWindow()
@@ -196,6 +207,16 @@ void MainWindow::disconnectSerial()
     ui->groupBox_controls->setEnabled( false );
 
     _connected = false;
+
+    ui->widget_plot_data_0->setInteraction( QCP::iRangeDrag, true );
+    ui->widget_plot_data_0->setInteraction( QCP::iRangeZoom, true );
+    ui->widget_plot_error_0->setInteraction( QCP::iRangeDrag, true );
+    ui->widget_plot_error_0->setInteraction( QCP::iRangeZoom, true );
+
+    ui->widget_plot_data_1->setInteraction( QCP::iRangeDrag, true );
+    ui->widget_plot_data_1->setInteraction( QCP::iRangeZoom, true );
+    ui->widget_plot_error_1->setInteraction( QCP::iRangeDrag, true );
+    ui->widget_plot_error_1->setInteraction( QCP::iRangeZoom, true );
 }
 
 bool MainWindow::connectSerial()
@@ -252,6 +273,16 @@ bool MainWindow::connectSerial()
 
     requestPidGains(0);
     requestPidGains(1);
+
+    ui->widget_plot_data_0->setInteraction( QCP::iRangeDrag, false );
+    ui->widget_plot_data_0->setInteraction( QCP::iRangeZoom, false );
+    ui->widget_plot_error_0->setInteraction( QCP::iRangeDrag, false );
+    ui->widget_plot_error_0->setInteraction( QCP::iRangeZoom, false );
+
+    ui->widget_plot_data_1->setInteraction( QCP::iRangeDrag, false );
+    ui->widget_plot_data_1->setInteraction( QCP::iRangeZoom, false );
+    ui->widget_plot_error_1->setInteraction( QCP::iRangeDrag, false );
+    ui->widget_plot_error_1->setInteraction( QCP::iRangeZoom, false );
 
     return true;
 }
@@ -1065,4 +1096,21 @@ void MainWindow::on_pushButton_send_params_clicked()
     sendParams( 1 );
 }
 
+void MainWindow::on_pushButton_calculate_k_params_clicked()
+{
+    RobotParamsCalculateDialog dlg;
 
+    int res = dlg.exec();
+
+    if( res == QDialog::Accepted )
+    {
+        double k_ang=0.0,k_vel=0.0;
+
+        if( dlg.getParams( k_ang, k_vel) )
+        {
+            ui->lineEdit_k_ang->setText( tr("%1").arg(k_ang));
+            ui->lineEdit_k_vel->setText( tr("%1").arg(k_vel));
+        }
+
+    }
+}

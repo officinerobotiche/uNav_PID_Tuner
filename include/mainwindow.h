@@ -71,6 +71,8 @@ private slots:
     void on_pushButton_get_gains_0_clicked();
     void on_pushButton_get_gains_1_clicked();
 
+    void on_pushButton_calculate_k_params_clicked();
+
 private:
     Ui::MainWindow *ui;
 
