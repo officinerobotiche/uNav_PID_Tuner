@@ -41,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) :
     _current_setPoint1=0.0;
     _current_error0=0.0;
     _current_error1=0.0;
+    _current_control0=0.0;
+    _current_control1=0.0;
 
     ui->lcdNumber_value_0->display( tr("%1").arg(_current_value0, 6,'f', 3) );
     ui->lcdNumber_setpoint_0->display( tr("%1").arg(_current_setPoint0, 6,'f', 3) );
@@ -56,6 +58,24 @@ MainWindow::MainWindow(QWidget *parent) :
             ui->widget_plot_error_0->xAxis, SLOT(setRange(QCPRange)) );
     connect(ui->widget_plot_data_1->xAxis, SIGNAL(rangeChanged(QCPRange)),
             ui->widget_plot_error_1->xAxis, SLOT(setRange(QCPRange)) );
+    connect(ui->widget_plot_error_0->xAxis, SIGNAL(rangeChanged(QCPRange)),
+            ui->widget_plot_data_0->xAxis, SLOT(setRange(QCPRange)) );
+    connect(ui->widget_plot_error_1->xAxis, SIGNAL(rangeChanged(QCPRange)),
+            ui->widget_plot_data_1->xAxis, SLOT(setRange(QCPRange)) );
+
+    connect(ui->widget_plot_error_0->xAxis, SIGNAL(rangeChanged(QCPRange)),
+            ui->widget_plot_error_0->xAxis2, SLOT(setRange(QCPRange)) );
+    connect(ui->widget_plot_error_1->xAxis, SIGNAL(rangeChanged(QCPRange)),
+            ui->widget_plot_error_1->xAxis2, SLOT(setRange(QCPRange)) );
+
+    connect(ui->widget_plot_data_0->xAxis, SIGNAL(rangeChanged(QCPRange)),
+            ui->widget_plot_data_0->xAxis2, SLOT(setRange(QCPRange)) );
+    connect(ui->widget_plot_data_1->xAxis, SIGNAL(rangeChanged(QCPRange)),
+            ui->widget_plot_data_1->xAxis2, SLOT(setRange(QCPRange)) );
+    connect(ui->widget_plot_data_0->yAxis, SIGNAL(rangeChanged(QCPRange)),
+            ui->widget_plot_data_0->yAxis2, SLOT(setRange(QCPRange)) );
+    connect(ui->widget_plot_data_1->yAxis, SIGNAL(rangeChanged(QCPRange)),
+            ui->widget_plot_data_1->yAxis2, SLOT(setRange(QCPRange)) );
 }
 
 MainWindow::~MainWindow()
@@ -73,13 +93,7 @@ void MainWindow::initPlots()
     QPen valPen(Qt::darkGreen);
     QPen spPen(Qt::darkBlue);
     QPen errPen(Qt::darkRed);
-
-    // >>>>> Time axis synchronization
-    connect(ui->widget_plot_data_0->xAxis, SIGNAL(rangeChanged(QCPRange)),
-            ui->widget_plot_error_0->xAxis, SLOT(setRange(QCPRange)));
-    connect(ui->widget_plot_data_1->xAxis, SIGNAL(rangeChanged(QCPRange)),
-            ui->widget_plot_error_1->xAxis, SLOT(setRange(QCPRange)));
-    // <<<<< Time axis synchronization
+    QPen ctrlPen(Qt::darkCyan);
 
     // >>>>> Motor 0
     _graphRange0 = DEFAULT_TIME_RANGE;
@@ -95,7 +109,8 @@ void MainWindow::initPlots()
     ui->widget_plot_data_0->graph(1)->setName( tr("SetPoint") );
     ui->widget_plot_data_0->graph(1)->setPen( spPen );
     ui->widget_plot_data_0->xAxis->setLabel( tr("time (msec)") );
-    ui->widget_plot_data_0->yAxis->setLabel( tr("values (sec)") );
+    ui->widget_plot_data_0->yAxis->setLabel( tr("values (rad)") );
+    ui->widget_plot_data_0->yAxis2->setLabel( tr("values (rad)") );
     ui->widget_plot_data_0->xAxis->setRange( 0, _graphRange0 );
     ui->widget_plot_data_0->yAxis->setRange( -DEFAULT_VALS_RANGE, DEFAULT_VALS_RANGE );
 
@@ -104,11 +119,19 @@ void MainWindow::initPlots()
     ui->widget_plot_error_0->legend->setVisible( true );
     ui->widget_plot_error_0->legend->setFont( QFont("Arial",8) );
     ui->widget_plot_error_0->addGraph();
+    ui->widget_plot_error_0->addGraph(ui->widget_plot_error_0->xAxis2, ui->widget_plot_error_0->yAxis2);
     ui->widget_plot_error_0->graph(0)->setName( tr("error") );
     ui->widget_plot_error_0->graph(0)->setPen( errPen );
+    ui->widget_plot_error_0->graph(1)->setName( tr("control") );
+    ui->widget_plot_error_0->graph(1)->setPen( ctrlPen );
     ui->widget_plot_error_0->xAxis->setLabel( tr("time (msec)") );
-    ui->widget_plot_error_0->yAxis->setLabel( tr("error (sec)") );
+    ui->widget_plot_error_0->yAxis->setLabel( tr("error (rad)") );
+    ui->widget_plot_error_0->yAxis2->setLabel( tr("control (V*sec/rad)") );
     ui->widget_plot_error_0->yAxis->setRange( -DEFAULT_VALS_RANGE, DEFAULT_VALS_RANGE );
+    ui->widget_plot_error_0->yAxis2->setRange( -DEFAULT_VALS_RANGE, DEFAULT_VALS_RANGE );
+
+    ui->widget_plot_data_0->yAxis2->setVisible(true);
+    ui->widget_plot_error_0->yAxis2->setVisible(true);
     // <<<<< Motor 0
 
     // >>>>> Motor 1
@@ -125,7 +148,8 @@ void MainWindow::initPlots()
     ui->widget_plot_data_1->graph(1)->setName( tr("SetPoint") );
     ui->widget_plot_data_1->graph(1)->setPen( spPen );
     ui->widget_plot_data_1->xAxis->setLabel( tr("time (msec)") );
-    ui->widget_plot_data_1->yAxis->setLabel( tr("values (sec)") );
+    ui->widget_plot_data_1->yAxis->setLabel( tr("values (rad)") );
+    ui->widget_plot_data_1->yAxis2->setLabel( tr("values (rad)") );
     ui->widget_plot_data_1->xAxis->setRange( 0, _graphRange1 );
     ui->widget_plot_data_1->yAxis->setRange( -DEFAULT_VALS_RANGE, DEFAULT_VALS_RANGE );
 
@@ -134,11 +158,19 @@ void MainWindow::initPlots()
     ui->widget_plot_error_1->legend->setVisible( true );
     ui->widget_plot_error_1->legend->setFont( QFont("Arial",8) );
     ui->widget_plot_error_1->addGraph();
+    ui->widget_plot_error_1->addGraph(ui->widget_plot_error_1->xAxis2, ui->widget_plot_error_1->yAxis2);
     ui->widget_plot_error_1->graph(0)->setName( tr("error") );
     ui->widget_plot_error_1->graph(0)->setPen( errPen );
+    ui->widget_plot_error_1->graph(1)->setName( tr("control") );
+    ui->widget_plot_error_1->graph(1)->setPen( ctrlPen );
     ui->widget_plot_error_1->xAxis->setLabel( tr("time (msec)") );
-    ui->widget_plot_error_1->yAxis->setLabel( tr("error (sec)") );
+    ui->widget_plot_error_1->yAxis->setLabel( tr("error (rad)") );
+    ui->widget_plot_error_1->yAxis2->setLabel( tr("control (V*sec/rad)") );
     ui->widget_plot_error_1->yAxis->setRange( -DEFAULT_VALS_RANGE, DEFAULT_VALS_RANGE );
+    ui->widget_plot_error_1->yAxis2->setRange( -DEFAULT_VALS_RANGE, DEFAULT_VALS_RANGE );
+
+    ui->widget_plot_data_1->yAxis2->setVisible(true);
+    ui->widget_plot_error_1->yAxis2->setVisible(true);
     // <<<<< Motor 1
 }
 
@@ -632,6 +664,7 @@ bool MainWindow::requestStatus(int motIdx)
                     _current_value0 = ((double)motor0.measure_vel)/1000.0;
                     _current_setPoint0 = ((double)motor0.refer_vel)/1000.0;
                     _current_error0 = _current_setPoint0-_current_value0;
+                    _current_control0 = ((double)motor0.control_vel)/1000.0;
 
                     break;
                 case MOTOR_R:
@@ -640,6 +673,7 @@ bool MainWindow::requestStatus(int motIdx)
                     _current_value1 = ((double)motor1.measure_vel)/1000.0;
                     _current_setPoint1 = ((double)motor1.refer_vel)/1000.0;
                     _current_error1 = _current_setPoint1-_current_value1;
+                    _current_control1 = ((double)motor1.control_vel)/1000.0;
 
                     break;
                 }
@@ -831,7 +865,7 @@ void MainWindow::onSetPointUpdateTimerTimeout()
         {
             setPoint = _setPoint_dyn_down;
 
-            qDebug() << tr( "T_down --- cycleTime: %1 msec - setpoint: %2").arg(cycleTime).arg(setPoint);
+            //qDebug() << tr( "T_down --- cycleTime: %1 msec - setpoint: %2").arg(cycleTime).arg(setPoint);
         }
         else if( cycleTime > _t_raise_msec + _t_up_msec ) // T_fall phase
         {
@@ -839,13 +873,13 @@ void MainWindow::onSetPointUpdateTimerTimeout()
             double y1 = _setPoint_dyn_down;
             setPoint = y0 + (y1-y0)*((double)cycleTime-((double)(_t_raise_msec + _t_up_msec)) )/((double)_t_fall_msec);
 
-            qDebug() << tr( "T_fall --- cycleTime: %1 msec - setpoint: %2").arg(cycleTime).arg(setPoint);
+            //qDebug() << tr( "T_fall --- cycleTime: %1 msec - setpoint: %2").arg(cycleTime).arg(setPoint);
         }
         else if( cycleTime > _t_raise_msec ) // T_up phase
         {
             setPoint = _setPoint_dyn_up;
 
-            qDebug() << tr( "T_up --- cycleTime: %1 msec - setpoint: %2").arg(cycleTime).arg(setPoint);
+            //qDebug() << tr( "T_up --- cycleTime: %1 msec - setpoint: %2").arg(cycleTime).arg(setPoint);
         }
         else // T_raise
         {
@@ -853,7 +887,7 @@ void MainWindow::onSetPointUpdateTimerTimeout()
             double y1 = _setPoint_dyn_up;
             setPoint = y0 + (y1-y0)*((double)cycleTime )/((double)_t_raise_msec);
 
-            qDebug() << tr( "T_raise --- cycleTime: %1 msec - setpoint: %2").arg(cycleTime).arg(setPoint);
+            //qDebug() << tr( "T_raise --- cycleTime: %1 msec - setpoint: %2").arg(cycleTime).arg(setPoint);
         }
     }
 
@@ -869,6 +903,8 @@ void MainWindow::onSetPointUpdateTimerTimeout()
         _timeVec0 << _curr_time_msec;
         _currMotorValVec0 << _current_value0;
         _errorVec0 << _current_error0;
+        _controlVec0 << _current_control0;
+        _controlVec1 << _current_control1;
 
         ui->lcdNumber_value_0->display( tr("%1").arg(_current_value0,6,'f', 3) );
         ui->lcdNumber_setpoint_0->display( tr("%1").arg(_current_setPoint0,6,'f', 3) );
@@ -951,21 +987,40 @@ void MainWindow::updatePlots0()
     qreal setPoint = _setPointVec0.last();
     qreal motorVal = _currMotorValVec0.last();
     qreal error = _errorVec0.last();
+    qreal control = _controlVec0.last();
 
     ui->widget_plot_data_0->graph(0)->addData( time, motorVal );
     ui->widget_plot_data_0->graph(1)->addData( time, setPoint );
     ui->widget_plot_error_0->graph(0)->addData( time, error );
+    ui->widget_plot_error_0->graph(1)->addData( time, control );
 
     ui->widget_plot_data_0->graph(0)->removeDataBefore( time-_graphRange0 );
     ui->widget_plot_data_0->graph(1)->removeDataBefore( time-_graphRange0 );
     ui->widget_plot_error_0->graph(0)->removeDataBefore( time-_graphRange0 );
+    ui->widget_plot_error_0->graph(1)->removeDataBefore( time-_graphRange0 );
 
-    //ui->widget_plot_data_0->graph(0)->rescaleValueAxis(true);
-    //ui->widget_plot_data_0->graph(1)->rescaleValueAxis(true);
-    ui->widget_plot_error_0->graph(0)->rescaleValueAxis(true);
+    if( error < _min_err_0 )
+        _min_err_0 = error*1.2;
+    if( error > _max_err_0 )
+        _max_err_0 = error*1.2;
+
+    if( motorVal < _min_val_0 )
+        _min_val_0 = motorVal*1.2;
+    if( motorVal > _max_val_0 )
+        _max_val_0 = motorVal*1.2;
+
+    if( control < _min_ctrl_0 )
+        _min_ctrl_0 = control*1.2;
+    if( control > _max_ctrl_0 )
+        _max_ctrl_0 = control*1.2;
+
+    ui->widget_plot_data_0->yAxis->setRange( _min_val_0, _max_val_0 );
+    ui->widget_plot_error_0->yAxis->setRange( _min_err_0, _max_err_0 );
+    ui->widget_plot_error_0->yAxis2->setRange( _min_ctrl_0, _max_ctrl_0);
 
     ui->widget_plot_data_0->xAxis->setRange( time+(((qreal)(_updateTimeMsec))/1000.0)*2, _graphRange0, Qt::AlignRight);
     ui->widget_plot_error_0->xAxis->setRange( time+(((qreal)(_updateTimeMsec))/1000.0)*2, _graphRange0, Qt::AlignRight);
+    ui->widget_plot_error_0->xAxis2->setRange( time+(((qreal)(_updateTimeMsec))/1000.0)*2, _graphRange0, Qt::AlignRight);
 
     ui->widget_plot_data_0->replot();
     ui->widget_plot_error_0->replot();
@@ -996,18 +1051,41 @@ void MainWindow::updatePlots1()
     qreal setPoint = _setPointVec1.last();
     qreal motorVal = _currMotorValVec1.last();
     qreal error = _errorVec1.last();
+    qreal control = _controlVec1.last();
 
     ui->widget_plot_data_1->graph(0)->addData( time, motorVal );
     ui->widget_plot_data_1->graph(1)->addData( time, setPoint);
     ui->widget_plot_error_1->graph(0)->addData( time, error );
+    ui->widget_plot_error_1->graph(1)->addData( time, control);
 
     ui->widget_plot_data_1->graph(0)->removeDataBefore( time-_graphRange1 );
     ui->widget_plot_data_1->graph(1)->removeDataBefore( time-_graphRange1 );
     ui->widget_plot_error_1->graph(0)->removeDataBefore( time-_graphRange1 );
+    ui->widget_plot_error_1->graph(1)->removeDataBefore( time-_graphRange1 );
 
-    //ui->widget_plot_data_1->graph(0)->rescaleValueAxis(true);
-    //ui->widget_plot_data_1->graph(1)->rescaleValueAxis(true);
-    ui->widget_plot_error_1->graph(0)->rescaleValueAxis(true);
+    if( error < _min_err_1 )
+        _min_err_1 = error*1.2;
+    if( error > _max_err_1 )
+        _max_err_1 = error*1.2;
+
+    if( motorVal < _min_val_1 )
+        _min_val_1 = motorVal*1.2;
+    if( motorVal > _max_val_1 )
+        _max_val_1 = motorVal*1.2;
+
+    if( control < _min_ctrl_1 )
+        _min_ctrl_1 = control*1.2;
+    if( control > _max_ctrl_1 )
+        _max_ctrl_1 = control*1.2;
+
+    ui->widget_plot_data_1->yAxis->setRange( _min_val_1, _max_val_1 );
+    ui->widget_plot_error_1->yAxis->setRange( _min_err_1, _max_err_1 );
+    ui->widget_plot_error_1->yAxis2->setRange( _min_ctrl_1, _max_ctrl_1);
+
+    ui->widget_plot_data_1->xAxis->setRange( time+(((qreal)(_updateTimeMsec))/1000.0)*2, _graphRange0, Qt::AlignRight);
+    ui->widget_plot_error_1->xAxis->setRange( time+(((qreal)(_updateTimeMsec))/1000.0)*2, _graphRange0, Qt::AlignRight);
+    ui->widget_plot_error_1->xAxis2->setRange( time+(((qreal)(_updateTimeMsec))/1000.0)*2, _graphRange0, Qt::AlignRight);
+
 
     ui->widget_plot_data_1->xAxis->setRange( time+(((qreal)(_updateTimeMsec))/1000.0)*2, _graphRange1, Qt::AlignRight);
     ui->widget_plot_error_1->xAxis->setRange( time+(((qreal)(_updateTimeMsec))/1000.0)*2, _graphRange1, Qt::AlignRight);
@@ -1071,8 +1149,7 @@ void MainWindow::on_pushButton_start_motors_clicked()
 
     _setPointUpdateTimer.setTimerType( Qt::PreciseTimer );
 
-    _timer.start();
-    _setPointUpdateTimer.start( _updateTimeMsec );
+
 
     ui->pushButton_start_motors->setEnabled(false);
     ui->pushButton_stop_motors->setEnabled(true);
@@ -1086,6 +1163,23 @@ void MainWindow::on_pushButton_start_motors_clicked()
     ui->widget_plot_data_1->setInteraction( QCP::iRangeZoom, false );
     ui->widget_plot_error_1->setInteraction( QCP::iRangeDrag, false );
     ui->widget_plot_error_1->setInteraction( QCP::iRangeZoom, false );
+
+    _min_err_0 = 0;
+    _max_err_0 = 0;
+    _min_val_0 = 0;
+    _max_val_0 = 0;
+    _min_ctrl_0 = 0;
+    _max_ctrl_0 = 0;
+
+    _min_err_1 = 0;
+    _max_err_1 = 0;
+    _min_val_1 = 0;
+    _max_val_1 = 0;
+    _min_ctrl_1 = 0;
+    _max_ctrl_1 = 0;
+
+    _timer.start();
+    _setPointUpdateTimer.start( _updateTimeMsec );
 }
 
 void MainWindow::on_checkBox_enable_0_clicked(bool checked)

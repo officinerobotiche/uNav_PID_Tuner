@@ -58,13 +58,11 @@ private slots:
     void onSetPointUpdateTimerTimeout();
 
     void on_checkBox_enable_0_clicked(bool checked);
-
     void on_checkBox_enable_1_clicked(bool checked);
 
     void on_checkBox_enable_mode_clicked();
 
     void on_checkBox_invert_mot_0_clicked();
-
     void on_checkBox_invert_mot_1_clicked();
 
     void on_pushButton_send_params_clicked();
@@ -86,10 +84,12 @@ private:
     QVector<qreal> _setPointVec0;
     QVector<qreal> _currMotorValVec0;
     QVector<qreal> _errorVec0;
+    QVector<qreal> _controlVec0;
 
     QVector<qreal> _setPointVec1;
     QVector<qreal> _currMotorValVec1;
     QVector<qreal> _errorVec1;
+    QVector<qreal> _controlVec1;
 
     qreal _graphRange0;
     qreal _graphRange1;
@@ -114,6 +114,22 @@ private:
     double _current_setPoint1;
     double _current_error0;
     double _current_error1;
+    double _current_control0;
+    double _current_control1;
+
+    double _min_err_0;
+    double _max_err_0;
+    double _min_val_0;
+    double _max_val_0;
+    double _min_ctrl_0;
+    double _max_ctrl_0;
+
+    double _min_err_1;
+    double _max_err_1;
+    double _min_val_1;
+    double _max_val_1;
+    double _min_ctrl_1;
+    double _max_ctrl_1;
 
     uint8_t _enablePolarity; ///< Polarity of the Enable signal
 
