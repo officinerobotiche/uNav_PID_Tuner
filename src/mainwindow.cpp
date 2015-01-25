@@ -11,7 +11,7 @@
 
 using namespace std;
 
-#define DEFAULT_TIME_RANGE 10000
+#define DEFAULT_TIME_RANGE 10.0
 #define DEFAULT_VALS_RANGE 10.0
 
 
@@ -52,15 +52,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     _enablePolarity = ui->checkBox_enable_mode->isChecked()?1:0;
 
-    ui->widget_plot_data_0->setInteraction( QCP::iRangeDrag, true );
-    ui->widget_plot_data_0->setInteraction( QCP::iRangeZoom, true );
-    ui->widget_plot_error_0->setInteraction( QCP::iRangeDrag, true );
-    ui->widget_plot_error_0->setInteraction( QCP::iRangeZoom, true );
-
-    ui->widget_plot_data_1->setInteraction( QCP::iRangeDrag, true );
-    ui->widget_plot_data_1->setInteraction( QCP::iRangeZoom, true );
-    ui->widget_plot_error_1->setInteraction( QCP::iRangeDrag, true );
-    ui->widget_plot_error_1->setInteraction( QCP::iRangeZoom, true );
+    connect(ui->widget_plot_data_0->xAxis, SIGNAL(rangeChanged(QCPRange)),
+            ui->widget_plot_error_0->xAxis, SLOT(setRange(QCPRange)) );
+    connect(ui->widget_plot_data_1->xAxis, SIGNAL(rangeChanged(QCPRange)),
+            ui->widget_plot_error_1->xAxis, SLOT(setRange(QCPRange)) );
 }
 
 MainWindow::~MainWindow()
@@ -255,6 +250,7 @@ bool MainWindow::connectSerial()
     ui->groupBox_motor_0->setEnabled( true );
     ui->groupBox_motor_1->setEnabled( true );
     ui->groupBox_controls->setEnabled( true );
+    ui->pushButton_start_motors->setEnabled( true );
 
     _connected = true;
 
@@ -274,15 +270,7 @@ bool MainWindow::connectSerial()
     requestPidGains(0);
     requestPidGains(1);
 
-    ui->widget_plot_data_0->setInteraction( QCP::iRangeDrag, false );
-    ui->widget_plot_data_0->setInteraction( QCP::iRangeZoom, false );
-    ui->widget_plot_error_0->setInteraction( QCP::iRangeDrag, false );
-    ui->widget_plot_error_0->setInteraction( QCP::iRangeZoom, false );
 
-    ui->widget_plot_data_1->setInteraction( QCP::iRangeDrag, false );
-    ui->widget_plot_data_1->setInteraction( QCP::iRangeZoom, false );
-    ui->widget_plot_error_1->setInteraction( QCP::iRangeDrag, false );
-    ui->widget_plot_error_1->setInteraction( QCP::iRangeZoom, false );
 
     return true;
 }
@@ -912,11 +900,6 @@ void MainWindow::onSetPointUpdateTimerTimeout()
 
 void MainWindow::on_pushButton_set_dynamic_setpoint_clicked()
 {
-    _setPointUpdateTimer.stop();
-
-    _curr_time_msec = 0;
-    _setPointUpdateTimer.setTimerType( Qt::PreciseTimer );
-
     _t_raise_msec = ui->lineEdit_t_raise->text().toDouble( )*1000.0;
     _t_up_msec = ui->lineEdit_t_up->text().toDouble( )*1000.0;
     _t_fall_msec = ui->lineEdit_t_fall->text().toDouble( )*1000.0;
@@ -928,10 +911,7 @@ void MainWindow::on_pushButton_set_dynamic_setpoint_clicked()
     _tot_dyn_cycle_msec = _t_raise_msec + _t_up_msec + _t_fall_msec + _t_down_msec;
 
     _current_value0 = 0.0;
-    _current_value1 = 0.0;
-
-    _timer.start();
-    _setPointUpdateTimer.start( _updateTimeMsec );
+    _current_value1 = 0.0;    
 
     ui->widget_plot_data_0->yAxis->setRange( _setPoint_dyn_down*1.1, _setPoint_dyn_up*1.1 );
     ui->widget_plot_data_1->yAxis->setRange( _setPoint_dyn_down*1.1, _setPoint_dyn_up*1.1 );
@@ -940,15 +920,10 @@ void MainWindow::on_pushButton_set_dynamic_setpoint_clicked()
 
 void MainWindow::on_pushButton_set_fixed_setpoint_clicked()
 {
-    _setPointUpdateTimer.stop();
-
     _setPoint_fixed = ui->lineEdit_fixed_setpoint->text().toDouble();
 
     _current_value0 = 0.0;
     _current_value1 = 0.0;
-
-    _timer.start();
-    _setPointUpdateTimer.start( _updateTimeMsec );
 }
 
 void MainWindow::updatePlots0()
@@ -972,25 +947,25 @@ void MainWindow::updatePlots0()
         return;
     }
 
-    quint64 time = _timeVec0.last();
+    qreal time = (qreal)(_timeVec0.last()-_time_bias)/1000.0;
     qreal setPoint = _setPointVec0.last();
     qreal motorVal = _currMotorValVec0.last();
     qreal error = _errorVec0.last();
 
-    ui->widget_plot_data_0->graph(0)->addData( (qreal)time, motorVal );
-    ui->widget_plot_data_0->graph(1)->addData( (qreal)time, setPoint );
-    ui->widget_plot_error_0->graph(0)->addData( (qreal)time, error );
+    ui->widget_plot_data_0->graph(0)->addData( time, motorVal );
+    ui->widget_plot_data_0->graph(1)->addData( time, setPoint );
+    ui->widget_plot_error_0->graph(0)->addData( time, error );
 
-    ui->widget_plot_data_0->graph(0)->removeDataBefore( (qreal)time-_graphRange0 );
-    ui->widget_plot_data_0->graph(1)->removeDataBefore( (qreal)time-_graphRange0 );
-    ui->widget_plot_error_0->graph(0)->removeDataBefore( (qreal)time-_graphRange0 );
+    ui->widget_plot_data_0->graph(0)->removeDataBefore( time-_graphRange0 );
+    ui->widget_plot_data_0->graph(1)->removeDataBefore( time-_graphRange0 );
+    ui->widget_plot_error_0->graph(0)->removeDataBefore( time-_graphRange0 );
 
     //ui->widget_plot_data_0->graph(0)->rescaleValueAxis(true);
     //ui->widget_plot_data_0->graph(1)->rescaleValueAxis(true);
     ui->widget_plot_error_0->graph(0)->rescaleValueAxis(true);
 
-    ui->widget_plot_data_0->xAxis->setRange( time+_updateTimeMsec*2, _graphRange0, Qt::AlignRight);
-    ui->widget_plot_error_0->xAxis->setRange( time+_updateTimeMsec*2, _graphRange0, Qt::AlignRight);
+    ui->widget_plot_data_0->xAxis->setRange( time+(((qreal)(_updateTimeMsec))/1000.0)*2, _graphRange0, Qt::AlignRight);
+    ui->widget_plot_error_0->xAxis->setRange( time+(((qreal)(_updateTimeMsec))/1000.0)*2, _graphRange0, Qt::AlignRight);
 
     ui->widget_plot_data_0->replot();
     ui->widget_plot_error_0->replot();
@@ -1017,25 +992,25 @@ void MainWindow::updatePlots1()
         return;
     }
 
-    quint64 time = _timeVec1.last();
+    qreal time = (qreal)(_timeVec0.last()-_time_bias)/1000.0;
     qreal setPoint = _setPointVec1.last();
     qreal motorVal = _currMotorValVec1.last();
     qreal error = _errorVec1.last();
 
-    ui->widget_plot_data_1->graph(0)->addData( (qreal)time, motorVal );
-    ui->widget_plot_data_1->graph(1)->addData( (qreal)time, setPoint);
-    ui->widget_plot_error_1->graph(0)->addData( (qreal)time, error );
+    ui->widget_plot_data_1->graph(0)->addData( time, motorVal );
+    ui->widget_plot_data_1->graph(1)->addData( time, setPoint);
+    ui->widget_plot_error_1->graph(0)->addData( time, error );
 
-    ui->widget_plot_data_1->graph(0)->removeDataBefore( (double)time-_graphRange1 );
-    ui->widget_plot_data_1->graph(1)->removeDataBefore( (double)time-_graphRange1 );
-    ui->widget_plot_error_1->graph(0)->removeDataBefore( (double)time-_graphRange1 );
+    ui->widget_plot_data_1->graph(0)->removeDataBefore( time-_graphRange1 );
+    ui->widget_plot_data_1->graph(1)->removeDataBefore( time-_graphRange1 );
+    ui->widget_plot_error_1->graph(0)->removeDataBefore( time-_graphRange1 );
 
     //ui->widget_plot_data_1->graph(0)->rescaleValueAxis(true);
     //ui->widget_plot_data_1->graph(1)->rescaleValueAxis(true);
     ui->widget_plot_error_1->graph(0)->rescaleValueAxis(true);
 
-    ui->widget_plot_data_1->xAxis->setRange( time+_updateTimeMsec*2, _graphRange1, Qt::AlignRight);
-    ui->widget_plot_error_1->xAxis->setRange( time+_updateTimeMsec*2, _graphRange1, Qt::AlignRight);
+    ui->widget_plot_data_1->xAxis->setRange( time+(((qreal)(_updateTimeMsec))/1000.0)*2, _graphRange1, Qt::AlignRight);
+    ui->widget_plot_error_1->xAxis->setRange( time+(((qreal)(_updateTimeMsec))/1000.0)*2, _graphRange1, Qt::AlignRight);
 
     ui->widget_plot_data_1->replot();
     ui->widget_plot_error_1->replot();
@@ -1062,6 +1037,55 @@ void MainWindow::on_pushButton_stop_motors_clicked()
     _setPointUpdateTimer.stop();
 
     stopMotors();
+
+    ui->pushButton_start_motors->setEnabled(true);
+    ui->pushButton_stop_motors->setEnabled(false);
+
+    ui->widget_plot_data_0->setInteraction( QCP::iRangeDrag, true );
+    ui->widget_plot_data_0->setInteraction( QCP::iRangeZoom, true );
+    ui->widget_plot_error_0->setInteraction( QCP::iRangeDrag, true );
+    ui->widget_plot_error_0->setInteraction( QCP::iRangeZoom, true );
+
+    ui->widget_plot_data_1->setInteraction( QCP::iRangeDrag, true );
+    ui->widget_plot_data_1->setInteraction( QCP::iRangeZoom, true );
+    ui->widget_plot_error_1->setInteraction( QCP::iRangeDrag, true );
+    ui->widget_plot_error_1->setInteraction( QCP::iRangeZoom, true );
+}
+
+void MainWindow::on_pushButton_start_motors_clicked()
+{
+    // >>>>> Update traiectory params
+    if(ui->radioButton_setpoint_dynamic->isChecked())
+        on_pushButton_set_dynamic_setpoint_clicked();
+    else
+        on_pushButton_set_fixed_setpoint_clicked();
+    // <<<<< Update traiectory params
+
+    // >>>>> Bias calculation to avoid "Start step"
+    double y0 = _setPoint_dyn_down;
+    double y1 = _setPoint_dyn_up;
+    _time_bias = (-y0*_t_raise_msec)/(y1-y0);
+    _curr_time_msec = _time_bias;
+    // <<<<< Bias calculation to avoid "Start step"
+
+
+    _setPointUpdateTimer.setTimerType( Qt::PreciseTimer );
+
+    _timer.start();
+    _setPointUpdateTimer.start( _updateTimeMsec );
+
+    ui->pushButton_start_motors->setEnabled(false);
+    ui->pushButton_stop_motors->setEnabled(true);
+
+    ui->widget_plot_data_0->setInteraction( QCP::iRangeDrag, false );
+    ui->widget_plot_data_0->setInteraction( QCP::iRangeZoom, false );
+    ui->widget_plot_error_0->setInteraction( QCP::iRangeDrag, false );
+    ui->widget_plot_error_0->setInteraction( QCP::iRangeZoom, false );
+
+    ui->widget_plot_data_1->setInteraction( QCP::iRangeDrag, false );
+    ui->widget_plot_data_1->setInteraction( QCP::iRangeZoom, false );
+    ui->widget_plot_error_1->setInteraction( QCP::iRangeDrag, false );
+    ui->widget_plot_error_1->setInteraction( QCP::iRangeZoom, false );
 }
 
 void MainWindow::on_checkBox_enable_0_clicked(bool checked)

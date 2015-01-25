@@ -53,6 +53,7 @@ private slots:
     void on_pushButton_set_fixed_setpoint_clicked();
     void on_pushButton_reset_clicked();
     void on_pushButton_stop_motors_clicked();
+    void on_pushButton_start_motors_clicked();
 
     void onSetPointUpdateTimerTimeout();
 
@@ -96,6 +97,7 @@ private:
     quint64 _updateTimeMsec;
 
     quint64 _curr_time_msec;
+    quint64 _time_bias;
     double _t_raise_msec;
     double _t_up_msec;
     double _t_fall_msec;
