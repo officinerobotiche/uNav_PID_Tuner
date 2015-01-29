@@ -44,12 +44,12 @@ MainWindow::MainWindow(QWidget *parent) :
     _current_control0=0.0;
     _current_control1=0.0;
 
-    ui->lcdNumber_value_0->display( tr("%1").arg(_current_value0, 6,'f', 3) );
-    ui->lcdNumber_setpoint_0->display( tr("%1").arg(_current_setPoint0, 6,'f', 3) );
-    ui->lcdNumber_error_0->display( tr("%1").arg(_current_error0, 6,'f', 3) );
+    ui->lcdNumber_value_0->display( tr("%1").arg(_current_value0, 9,'f', 3) );
+    ui->lcdNumber_setpoint_0->display( tr("%1").arg(_current_setPoint0, 9,'f', 3) );
+    ui->lcdNumber_error_0->display( tr("%1").arg(_current_error0, 9,'f', 3) );
 
-    ui->lcdNumber_value_1->display( tr("%1").arg(_current_value1, 6,'f', 3) );
-    ui->lcdNumber_setpoint_1->display( tr("%1").arg(_current_setPoint1, 6,'f', 3) );
+    ui->lcdNumber_value_1->display( tr("%1").arg(_current_value1, 9,'f', 3) );
+    ui->lcdNumber_setpoint_1->display( tr("%1").arg(_current_setPoint1, 9,'f', 3) );
     ui->lcdNumber_error_1->display( tr("%1").arg(_current_error0, 1,'f', 3) );
 
     _enablePolarity = ui->checkBox_enable_mode->isChecked()?1:0;
@@ -906,9 +906,9 @@ void MainWindow::onSetPointUpdateTimerTimeout()
         _controlVec0 << _current_control0;
         _controlVec1 << _current_control1;
 
-        ui->lcdNumber_value_0->display( tr("%1").arg(_current_value0,6,'f', 3) );
-        ui->lcdNumber_setpoint_0->display( tr("%1").arg(_current_setPoint0,6,'f', 3) );
-        ui->lcdNumber_error_0->display( tr("%1").arg(_current_error0,6,'f', 3) );
+        ui->lcdNumber_value_0->display( tr("%1").arg(_current_value0,9,'f', 3) );
+        ui->lcdNumber_setpoint_0->display( tr("%1").arg(_current_setPoint0,9,'f', 3) );
+        ui->lcdNumber_error_0->display( tr("%1").arg(_current_error0,9,'f', 3) );
 
         updatePlots0();
     }
@@ -926,9 +926,9 @@ void MainWindow::onSetPointUpdateTimerTimeout()
         _currMotorValVec1 << _current_value1;
         _errorVec1 << _current_error1;
 
-        ui->lcdNumber_value_1->display( tr("%1").arg(_current_value1,6,'f', 3) );
-        ui->lcdNumber_setpoint_1->display( tr("%1").arg(_current_setPoint1,6,'f', 3) );
-        ui->lcdNumber_error_1->display( tr("%1").arg(_current_error1,6,'f', 3) );
+        ui->lcdNumber_value_1->display( tr("%1").arg(_current_value1,9,'f', 3) );
+        ui->lcdNumber_setpoint_1->display( tr("%1").arg(_current_setPoint1,9,'f', 3) );
+        ui->lcdNumber_error_1->display( tr("%1").arg(_current_error1,9,'f', 3) );
 
         updatePlots1();
     }

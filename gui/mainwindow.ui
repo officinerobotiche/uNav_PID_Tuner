@@ -137,7 +137,16 @@
          <string>Motor 0 Plots</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
-         <property name="margin">
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>5</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
           <number>5</number>
          </property>
          <item row="0" column="0">
@@ -152,7 +161,16 @@
             <string>Data</string>
            </property>
            <layout class="QGridLayout" name="gridLayout">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item row="0" column="1">
@@ -180,7 +198,16 @@
             <string>Error</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item row="0" column="0">
@@ -211,7 +238,16 @@
          <string>Motor 1 Plots</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_12">
-         <property name="margin">
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>5</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
           <number>5</number>
          </property>
          <item row="0" column="0">
@@ -226,7 +262,16 @@
             <string>Data</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_13">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item row="0" column="0">
@@ -254,7 +299,16 @@
             <string>Error</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_14">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item row="0" column="0">
@@ -326,6 +380,9 @@
                  <height>16777215</height>
                 </size>
                </property>
+               <property name="digitCount">
+                <number>8</number>
+               </property>
               </widget>
              </item>
             </layout>
@@ -359,6 +416,9 @@
                  <height>16777215</height>
                 </size>
                </property>
+               <property name="digitCount">
+                <number>8</number>
+               </property>
               </widget>
              </item>
             </layout>
@@ -391,6 +451,9 @@
                  <width>250</width>
                  <height>16777215</height>
                 </size>
+               </property>
+               <property name="digitCount">
+                <number>8</number>
                </property>
               </widget>
              </item>
@@ -432,6 +495,12 @@
                <property name="decimals">
                 <number>3</number>
                </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
                <property name="value">
                 <double>2.000000000000000</double>
                </property>
@@ -471,6 +540,12 @@
                <property name="decimals">
                 <number>3</number>
                </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
+               </property>
                <property name="value">
                 <double>0.500000000000000</double>
                </property>
@@ -509,6 +584,12 @@
                </property>
                <property name="decimals">
                 <number>3</number>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.100000000000000</double>
                </property>
                <property name="value">
                 <double>0.800000000000000</double>
@@ -603,6 +684,12 @@
                  <property name="decimals">
                   <number>3</number>
                  </property>
+                 <property name="maximum">
+                  <double>100.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>0.100000000000000</double>
+                 </property>
                  <property name="value">
                   <double>2.000000000000000</double>
                  </property>
@@ -642,6 +729,12 @@
                  <property name="decimals">
                   <number>3</number>
                  </property>
+                 <property name="maximum">
+                  <double>100.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>0.100000000000000</double>
+                 </property>
                  <property name="value">
                   <double>0.500000000000000</double>
                  </property>
@@ -680,6 +773,12 @@
                  </property>
                  <property name="decimals">
                   <number>3</number>
+                 </property>
+                 <property name="maximum">
+                  <double>100.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>0.100000000000000</double>
                  </property>
                  <property name="value">
                   <double>0.800000000000000</double>
@@ -726,6 +825,9 @@
                  <height>16777215</height>
                 </size>
                </property>
+               <property name="digitCount">
+                <number>8</number>
+               </property>
               </widget>
              </item>
             </layout>
@@ -759,6 +861,9 @@
                  <height>16777215</height>
                 </size>
                </property>
+               <property name="digitCount">
+                <number>8</number>
+               </property>
               </widget>
              </item>
             </layout>
@@ -791,6 +896,9 @@
                  <width>250</width>
                  <height>16777215</height>
                 </size>
+               </property>
+               <property name="digitCount">
+                <number>8</number>
                </property>
               </widget>
              </item>
@@ -896,7 +1004,16 @@ Motors</string>
             <string>Enable</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item>
@@ -962,7 +1079,16 @@ Motors</string>
             <string>Rotation versus</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_6">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item>
@@ -1009,7 +1135,16 @@ Motors</string>
             <string>Parameters</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_9">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item>
@@ -1095,7 +1230,16 @@ Motors</string>
             <string>SetPoint</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_21">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item row="0" column="1">
