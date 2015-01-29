@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1182</width>
-    <height>1041</height>
+    <width>1280</width>
+    <height>1010</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,6 +27,21 @@
          <string>Connection</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_18">
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>5</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
+          <number>5</number>
+         </property>
+         <property name="spacing">
+          <number>3</number>
+         </property>
          <item row="0" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_11">
            <item>
@@ -102,6 +117,21 @@
          <string>Plots</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_4">
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>5</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
+          <number>5</number>
+         </property>
+         <property name="spacing">
+          <number>3</number>
+         </property>
          <item row="0" column="0">
           <widget class="QPushButton" name="pushButton_reset">
            <property name="sizePolicy">
@@ -137,7 +167,16 @@
          <string>Motor 0 Plots</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
-         <property name="margin">
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>5</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
           <number>5</number>
          </property>
          <item row="0" column="0">
@@ -152,7 +191,16 @@
             <string>Data</string>
            </property>
            <layout class="QGridLayout" name="gridLayout">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item row="0" column="1">
@@ -180,7 +228,16 @@
             <string>Error</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item row="0" column="0">
@@ -211,7 +268,16 @@
          <string>Motor 1 Plots</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_12">
-         <property name="margin">
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>5</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
           <number>5</number>
          </property>
          <item row="0" column="0">
@@ -226,7 +292,16 @@
             <string>Data</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_13">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item row="0" column="0">
@@ -254,7 +329,16 @@
             <string>Error</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_14">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item row="0" column="0">
@@ -294,6 +378,18 @@
         <layout class="QGridLayout" name="gridLayout_7">
          <property name="sizeConstraint">
           <enum>QLayout::SetDefaultConstraint</enum>
+         </property>
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>5</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
+          <number>5</number>
          </property>
          <item row="0" column="2">
           <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -429,11 +525,20 @@
                  <height>16777215</height>
                 </size>
                </property>
+               <property name="inputMethodHints">
+                <set>Qt::ImhFormattedNumbersOnly</set>
+               </property>
                <property name="decimals">
                 <number>3</number>
                </property>
+               <property name="maximum">
+                <double>1.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.050000000000000</double>
+               </property>
                <property name="value">
-                <double>2.000000000000000</double>
+                <double>1.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -468,8 +573,17 @@
                  <height>16777215</height>
                 </size>
                </property>
+               <property name="inputMethodHints">
+                <set>Qt::ImhFormattedNumbersOnly</set>
+               </property>
                <property name="decimals">
                 <number>3</number>
+               </property>
+               <property name="maximum">
+                <double>1.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.050000000000000</double>
                </property>
                <property name="value">
                 <double>0.500000000000000</double>
@@ -507,8 +621,17 @@
                  <height>16777215</height>
                 </size>
                </property>
+               <property name="inputMethodHints">
+                <set>Qt::ImhFormattedNumbersOnly</set>
+               </property>
                <property name="decimals">
                 <number>3</number>
+               </property>
+               <property name="maximum">
+                <double>1.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.050000000000000</double>
                </property>
                <property name="value">
                 <double>0.800000000000000</double>
@@ -567,6 +690,18 @@
          <string>Motor 1</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_8">
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>5</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
+          <number>5</number>
+         </property>
          <item row="0" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
@@ -600,11 +735,20 @@
                    <height>16777215</height>
                   </size>
                  </property>
+                 <property name="inputMethodHints">
+                  <set>Qt::ImhFormattedNumbersOnly</set>
+                 </property>
                  <property name="decimals">
                   <number>3</number>
                  </property>
+                 <property name="maximum">
+                  <double>1.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>0.050000000000000</double>
+                 </property>
                  <property name="value">
-                  <double>2.000000000000000</double>
+                  <double>1.000000000000000</double>
                  </property>
                 </widget>
                </item>
@@ -639,8 +783,17 @@
                    <height>16777215</height>
                   </size>
                  </property>
+                 <property name="inputMethodHints">
+                  <set>Qt::ImhFormattedNumbersOnly</set>
+                 </property>
                  <property name="decimals">
                   <number>3</number>
+                 </property>
+                 <property name="maximum">
+                  <double>1.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>0.050000000000000</double>
                  </property>
                  <property name="value">
                   <double>0.500000000000000</double>
@@ -678,8 +831,17 @@
                    <height>16777215</height>
                   </size>
                  </property>
+                 <property name="inputMethodHints">
+                  <set>Qt::ImhFormattedNumbersOnly</set>
+                 </property>
                  <property name="decimals">
                   <number>3</number>
+                 </property>
+                 <property name="maximum">
+                  <double>1.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>0.050000000000000</double>
                  </property>
                  <property name="value">
                   <double>0.800000000000000</double>
@@ -846,6 +1008,18 @@
          <string>Controls</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_6">
+         <property name="leftMargin">
+          <number>5</number>
+         </property>
+         <property name="topMargin">
+          <number>5</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+         <property name="bottomMargin">
+          <number>5</number>
+         </property>
          <item row="0" column="0">
           <layout class="QVBoxLayout" name="verticalLayout_12">
            <item>
@@ -896,7 +1070,16 @@ Motors</string>
             <string>Enable</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item>
@@ -962,7 +1145,16 @@ Motors</string>
             <string>Rotation versus</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_6">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item>
@@ -1009,7 +1201,16 @@ Motors</string>
             <string>Parameters</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_9">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item>
@@ -1028,6 +1229,9 @@ Motors</string>
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
+                </property>
+                <property name="inputMethodHints">
+                 <set>Qt::ImhFormattedNumbersOnly</set>
                 </property>
                 <property name="text">
                  <string>34278152.248661</string>
@@ -1052,6 +1256,9 @@ Motors</string>
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
+                </property>
+                <property name="inputMethodHints">
+                 <set>Qt::ImhFormattedNumbersOnly</set>
                 </property>
                 <property name="text">
                  <string>0.000214</string>
@@ -1095,7 +1302,16 @@ Motors</string>
             <string>SetPoint</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_21">
-            <property name="margin">
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
              <number>5</number>
             </property>
             <item row="0" column="1">
@@ -1132,24 +1348,21 @@ Motors</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="lineEdit_fixed_setpoint">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
+                 <widget class="QDoubleSpinBox" name="doubleSpinBox_fixed_setpoint">
+                  <property name="decimals">
+                   <number>2</number>
                   </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>80</width>
-                    <height>16777215</height>
-                   </size>
+                  <property name="minimum">
+                   <double>-50.000000000000000</double>
                   </property>
-                  <property name="text">
-                   <string>10</string>
+                  <property name="maximum">
+                   <double>50.000000000000000</double>
                   </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
+                  <property name="singleStep">
+                   <double>0.500000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>10.000000000000000</double>
                   </property>
                  </widget>
                 </item>
@@ -1183,6 +1396,31 @@ Motors</string>
                  </size>
                 </property>
                </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_15">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>220</width>
+                  <height>220</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="resources.qrc">:/images/ORlogoSimple.png</pixmap>
+                </property>
+                <property name="scaledContents">
+                 <bool>true</bool>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -1226,24 +1464,18 @@ Motors</string>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="lineEdit_t_fall">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_t_fall">
+                     <property name="decimals">
+                      <number>1</number>
                      </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>80</width>
-                       <height>16777215</height>
-                      </size>
+                     <property name="maximum">
+                      <double>10.000000000000000</double>
                      </property>
-                     <property name="text">
-                      <string>1</string>
+                     <property name="singleStep">
+                      <double>0.500000000000000</double>
                      </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
+                     <property name="value">
+                      <double>1.000000000000000</double>
                      </property>
                     </widget>
                    </item>
@@ -1265,63 +1497,18 @@ Motors</string>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="lineEdit_t_raise">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_t_raise">
+                     <property name="decimals">
+                      <number>1</number>
                      </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>80</width>
-                       <height>16777215</height>
-                      </size>
+                     <property name="maximum">
+                      <double>10.000000000000000</double>
                      </property>
-                     <property name="text">
-                      <string>1</string>
+                     <property name="singleStep">
+                      <double>0.500000000000000</double>
                      </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item row="2" column="1">
-                  <layout class="QHBoxLayout" name="horizontalLayout_17">
-                   <item>
-                    <widget class="QLabel" name="label_13">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>Val_up</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLineEdit" name="lineEdit_val_up">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>80</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>8.5</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
+                     <property name="value">
+                      <double>1.000000000000000</double>
                      </property>
                     </widget>
                    </item>
@@ -1356,24 +1543,18 @@ Motors</string>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="lineEdit_t_up">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_t_up">
+                     <property name="decimals">
+                      <number>1</number>
                      </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>80</width>
-                       <height>16777215</height>
-                      </size>
+                     <property name="maximum">
+                      <double>10.000000000000000</double>
                      </property>
-                     <property name="text">
-                      <string>2</string>
+                     <property name="singleStep">
+                      <double>0.500000000000000</double>
                      </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
+                     <property name="value">
+                      <double>1.000000000000000</double>
                      </property>
                     </widget>
                    </item>
@@ -1395,70 +1576,25 @@ Motors</string>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="lineEdit_t_down">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_t_down">
+                     <property name="decimals">
+                      <number>1</number>
                      </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>80</width>
-                       <height>16777215</height>
-                      </size>
+                     <property name="maximum">
+                      <double>10.000000000000000</double>
                      </property>
-                     <property name="text">
-                      <string>2</string>
+                     <property name="singleStep">
+                      <double>0.500000000000000</double>
                      </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item row="2" column="2">
-                  <layout class="QHBoxLayout" name="horizontalLayout_18">
-                   <item>
-                    <widget class="QLabel" name="label_14">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>Val_down</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLineEdit" name="lineEdit_val_down">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>80</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>-8.5</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
+                     <property name="value">
+                      <double>1.000000000000000</double>
                      </property>
                     </widget>
                    </item>
                   </layout>
                  </item>
                  <item row="5" column="1" colspan="2">
-                  <widget class="QLabel" name="label_15">
+                  <widget class="QLabel" name="label_legenda">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -1488,6 +1624,78 @@ Motors</string>
                    </property>
                   </widget>
                  </item>
+                 <item row="2" column="1">
+                  <layout class="QHBoxLayout" name="horizontalLayout_18">
+                   <item>
+                    <widget class="QLabel" name="label_14">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>Val_down</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_val_down">
+                     <property name="decimals">
+                      <number>2</number>
+                     </property>
+                     <property name="minimum">
+                      <double>-50.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>50.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.500000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>-10.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item row="2" column="2">
+                  <layout class="QHBoxLayout" name="horizontalLayout_17">
+                   <item>
+                    <widget class="QLabel" name="label_13">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>Val_up</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QDoubleSpinBox" name="doubleSpinBox_val_up">
+                     <property name="decimals">
+                      <number>2</number>
+                     </property>
+                     <property name="minimum">
+                      <double>-50.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>50.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.500000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>10.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
                 </layout>
                </widget>
               </item>
@@ -1508,7 +1716,7 @@ Motors</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1182</width>
+     <width>1280</width>
      <height>25</height>
     </rect>
    </property>
@@ -1523,6 +1731,37 @@ Motors</string>
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>pushButton_connect</tabstop>
+  <tabstop>comboBox_serial_port</tabstop>
+  <tabstop>pushButton_update_serial_list</tabstop>
+  <tabstop>pushButton_reset</tabstop>
+  <tabstop>doubleSpinBox_kp_0</tabstop>
+  <tabstop>doubleSpinBox_ki_0</tabstop>
+  <tabstop>doubleSpinBox_kd_0</tabstop>
+  <tabstop>pushButton_send_gains_0</tabstop>
+  <tabstop>pushButton_get_gains_0</tabstop>
+  <tabstop>pushButton_start_motors</tabstop>
+  <tabstop>pushButton_stop_motors</tabstop>
+  <tabstop>checkBox_enable_0</tabstop>
+  <tabstop>checkBox_enable_1</tabstop>
+  <tabstop>checkBox_enable_mode</tabstop>
+  <tabstop>checkBox_invert_mot_0</tabstop>
+  <tabstop>checkBox_invert_mot_1</tabstop>
+  <tabstop>lineEdit_k_vel</tabstop>
+  <tabstop>lineEdit_k_ang</tabstop>
+  <tabstop>pushButton_calculate_k_params</tabstop>
+  <tabstop>pushButton_send_params</tabstop>
+  <tabstop>radioButton_setpoint_dynamic</tabstop>
+  <tabstop>pushButton_set_dynamic_setpoint</tabstop>
+  <tabstop>radioButton_setpoint_fixed</tabstop>
+  <tabstop>pushButton_set_fixed_setpoint</tabstop>
+  <tabstop>doubleSpinBox_kp_1</tabstop>
+  <tabstop>doubleSpinBox_ki_1</tabstop>
+  <tabstop>doubleSpinBox_kd_1</tabstop>
+  <tabstop>pushButton_send_gains_1</tabstop>
+  <tabstop>pushButton_get_gains_1</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

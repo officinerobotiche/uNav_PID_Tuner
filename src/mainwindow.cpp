@@ -303,7 +303,6 @@ bool MainWindow::connectSerial()
     requestPidGains(1);
 
 
-
     return true;
 }
 
@@ -540,8 +539,25 @@ bool MainWindow::sendPIDGains1(float kp, float ki, float kd )
 
 bool MainWindow::sendParams( int motIdx )
 {
-    float k_vel = ui->lineEdit_k_vel->text().toFloat();
-    float k_ang = ui->lineEdit_k_ang->text().toFloat();
+    bool ok;
+
+    float k_vel = ui->lineEdit_k_vel->text().toFloat( &ok );
+
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for K_vel.\r\nRemember that decimal values use dot as separator.") );
+        return false;
+    }
+
+    float k_ang = ui->lineEdit_k_ang->text().toFloat( &ok );
+
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for K_ang.\r\nRemember that decimal values use dot as separator.") );
+        return false;
+    }
 
     int8_t versus = 1;
 
@@ -818,9 +834,34 @@ void MainWindow::on_pushButton_connect_clicked(bool checked)
 
 void MainWindow::on_pushButton_send_gains_0_clicked()
 {
-    double kp = ui->doubleSpinBox_kp_0->text().toDouble();
-    double ki = ui->doubleSpinBox_ki_0->text().toDouble();
-    double kd = ui->doubleSpinBox_kd_0->text().toDouble();
+    bool ok;
+
+    double kp = ui->doubleSpinBox_kp_0->text().toDouble(&ok);
+
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for K_p.\r\nRemember that decimal values use dot as separator.") );
+        return;
+    }
+
+    double ki = ui->doubleSpinBox_ki_0->text().toDouble(&ok);
+
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for K_i.\r\nRemember that decimal values use dot as separator.") );
+        return;
+    }
+
+    double kd = ui->doubleSpinBox_kd_0->text().toDouble(&ok);
+
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for K_d.\r\nRemember that decimal values use dot as separator.") );
+        return;
+    }
 
     sendPIDGains0( kp, ki, kd );
 }
@@ -837,9 +878,34 @@ void MainWindow::on_pushButton_get_gains_1_clicked()
 
 void MainWindow::on_pushButton_send_gains_1_clicked()
 {
-    double kp = ui->doubleSpinBox_kp_1->text().toDouble();
-    double ki = ui->doubleSpinBox_ki_1->text().toDouble();
-    double kd = ui->doubleSpinBox_kd_1->text().toDouble();
+    bool ok;
+
+    double kp = ui->doubleSpinBox_kp_1->text().toDouble(&ok);
+
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for K_p.\r\nRemember that decimal values use dot as separator.") );
+        return;
+    }
+
+    double ki = ui->doubleSpinBox_ki_1->text().toDouble(&ok);
+
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for K_i.\r\nRemember that decimal values use dot as separator.") );
+        return;
+    }
+
+    double kd = ui->doubleSpinBox_kd_1->text().toDouble(&ok);
+
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for K_d.\r\nRemember that decimal values use dot as separator.") );
+        return;
+    }
 
     sendPIDGains1( kp, ki, kd );
 }
@@ -936,18 +1002,65 @@ void MainWindow::onSetPointUpdateTimerTimeout()
 
 void MainWindow::on_pushButton_set_dynamic_setpoint_clicked()
 {
-    _t_raise_msec = ui->lineEdit_t_raise->text().toDouble( )*1000.0;
-    _t_up_msec = ui->lineEdit_t_up->text().toDouble( )*1000.0;
-    _t_fall_msec = ui->lineEdit_t_fall->text().toDouble( )*1000.0;
-    _t_down_msec = ui->lineEdit_t_down->text().toDouble( )*1000.0;
+    bool ok;
+    _t_raise_msec = ui->doubleSpinBox_t_raise->text().toDouble( &ok )*1000.0;
 
-    _setPoint_dyn_up = ui->lineEdit_val_up->text().toDouble();
-    _setPoint_dyn_down = ui->lineEdit_val_down->text().toDouble();
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for T_raise.\r\nRemember that decimal values use dot as separator.") );
+        return;
+    }
+
+    _t_up_msec = ui->doubleSpinBox_t_up->text().toDouble( &ok )*1000.0;
+
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for T_up.\r\nRemember that decimal values use dot as separator.") );
+        return;
+    }
+
+    _t_fall_msec = ui->doubleSpinBox_t_fall->text().toDouble( &ok )*1000.0;
+
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for T_fall.\r\nRemember that decimal values use dot as separator.") );
+        return;
+    }
+
+    _t_down_msec = ui->doubleSpinBox_t_down->text().toDouble( &ok )*1000.0;
+
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for T_down.\r\nRemember that decimal values use dot as separator.") );
+        return;
+    }
+
+    _setPoint_dyn_up = ui->doubleSpinBox_val_up->text().toDouble( &ok );
+
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for Val_up.\r\nRemember that decimal values use dot as separator.") );
+        return;
+    }
+
+    _setPoint_dyn_down = ui->doubleSpinBox_val_down->text().toDouble( &ok );
+
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for Val_down.\r\nRemember that decimal values use dot as separator.") );
+        return;
+    }
 
     _tot_dyn_cycle_msec = _t_raise_msec + _t_up_msec + _t_fall_msec + _t_down_msec;
 
     _current_value0 = 0.0;
-    _current_value1 = 0.0;    
+    _current_value1 = 0.0;
 
     ui->widget_plot_data_0->yAxis->setRange( _setPoint_dyn_down*1.1, _setPoint_dyn_up*1.1 );
     ui->widget_plot_data_1->yAxis->setRange( _setPoint_dyn_down*1.1, _setPoint_dyn_up*1.1 );
@@ -956,7 +1069,15 @@ void MainWindow::on_pushButton_set_dynamic_setpoint_clicked()
 
 void MainWindow::on_pushButton_set_fixed_setpoint_clicked()
 {
-    _setPoint_fixed = ui->lineEdit_fixed_setpoint->text().toDouble();
+    bool ok;
+    _setPoint_fixed = ui->doubleSpinBox_fixed_setpoint->text().toDouble( &ok );
+
+    if( !ok )
+    {
+        QMessageBox::warning( this, tr("Incorrect value"),
+                              tr("Please insert a correct value for SetPoint.\r\nRemember that decimal values use dot as separator.") );
+        return;
+    }
 
     _current_value0 = 0.0;
     _current_value1 = 0.0;

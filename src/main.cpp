@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QFile>
+#include <QLocale>
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +16,8 @@ int main(int argc, char *argv[])
 //    QString style( styleFile.readAll() );
 //    a.setStyleSheet( style );
 //    // <<<<< Apply the loaded stylesheet
+
+    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedStates));
 
     MainWindow w;
     w.show();
