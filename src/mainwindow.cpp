@@ -396,7 +396,7 @@ bool MainWindow::sendSetpoint0( double setPoint )
 
     try
     {
-        motor_control_t motor_ref = (int16_t) (setPoint*1000.0); //Convert in millirad/s
+        motor_control_t motor_ref = (int16_t) (setPoint*1000.0); //Convert in centirad/s
         _uNav->parserSendPacket(_uNav->createDataPacket(VEL_MOTOR_L, HASHMAP_MOTION, (abstract_message_u*) & motor_ref), 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
@@ -431,7 +431,7 @@ bool MainWindow::sendSetpoint1( double setPoint )
 
     try
     {
-        motor_control_t motor_ref = (int16_t) (setPoint*1000); //Convert in millirad/s
+        motor_control_t motor_ref = (int16_t) (setPoint*1000.0); //Convert in millirad/s
         _uNav->parserSendPacket(_uNav->createDataPacket(VEL_MOTOR_R, HASHMAP_MOTION, (abstract_message_u*) & motor_ref), 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
@@ -863,6 +863,20 @@ void MainWindow::on_pushButton_send_gains_0_clicked()
         return;
     }
 
+    if( (kp+ki+kd) > 1 )
+    {
+        QMessageBox::warning( this, tr("Incorrect values" ),
+                              tr("You should respect the relation\r\nKp + Ki + Kd < 1") );
+        return;
+    }
+
+    if( (kp + 2*kd) > 1 )
+    {
+        QMessageBox::warning( this, tr("Incorrect values" ),
+                              tr("You should respect the relation\r\nKp + 2*Kd < 1") );
+        return;
+    }
+
     sendPIDGains0( kp, ki, kd );
 }
 
@@ -1215,17 +1229,53 @@ void MainWindow::updatePlots1()
     ui->widget_plot_error_1->replot();
 }
 
+void MainWindow::on_pushButton_reset_zoom_clicked()
+{
+    _min_err_0 = 0;
+    _max_err_0 = 0;
+    _min_val_0 = 0;
+    _max_val_0 = 0;
+    _min_ctrl_0 = 0;
+    _max_ctrl_0 = 0;
+
+    _min_err_1 = 0;
+    _max_err_1 = 0;
+    _min_val_1 = 0;
+    _max_val_1 = 0;
+    _min_ctrl_1 = 0;
+    _max_ctrl_1 = 0;
+
+    updatePlots0();
+    updatePlots1();
+}
+
 void MainWindow::on_pushButton_reset_clicked()
 {
     _timeVec0.clear();
     _setPointVec0.clear();
     _currMotorValVec0.clear();
     _errorVec0.clear();
+    _controlVec0.clear();
 
     _timeVec1.clear();
     _setPointVec1.clear();
     _currMotorValVec1.clear();
     _errorVec1.clear();
+    _controlVec1.clear();
+
+    _min_err_0 = 0;
+    _max_err_0 = 0;
+    _min_val_0 = 0;
+    _max_val_0 = 0;
+    _min_ctrl_0 = 0;
+    _max_ctrl_0 = 0;
+
+    _min_err_1 = 0;
+    _max_err_1 = 0;
+    _min_val_1 = 0;
+    _max_val_1 = 0;
+    _min_ctrl_1 = 0;
+    _max_ctrl_1 = 0;
 
     updatePlots0();
     updatePlots1();
@@ -1353,3 +1403,5 @@ void MainWindow::on_pushButton_calculate_k_params_clicked()
 
     }
 }
+
+

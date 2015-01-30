@@ -72,6 +72,8 @@ private slots:
 
     void on_pushButton_calculate_k_params_clicked();
 
+    void on_pushButton_reset_zoom_clicked();
+
 private:
     Ui::MainWindow *ui;
 
