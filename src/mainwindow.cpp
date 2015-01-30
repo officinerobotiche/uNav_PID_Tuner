@@ -1007,7 +1007,6 @@ void MainWindow::onSetPointUpdateTimerTimeout()
             _currMotorValVec0 << _current_value0;
             _errorVec0 << _current_error0;
             _controlVec0 << _current_control0;
-            _controlVec1 << _current_control1;
 
             ui->lcdNumber_value_0->display( tr("%1").arg(_current_value0,9,'f', 3) );
             ui->lcdNumber_setpoint_0->display( tr("%1").arg(_current_setPoint0,9,'f', 3) );
@@ -1028,6 +1027,7 @@ void MainWindow::onSetPointUpdateTimerTimeout()
             _timeVec1 << _curr_time_msec;
             _currMotorValVec1 << _current_value1;
             _errorVec1 << _current_error1;
+            _controlVec1 << _current_control1;
 
             ui->lcdNumber_value_1->display( tr("%1").arg(_current_value1,9,'f', 3) );
             ui->lcdNumber_setpoint_1->display( tr("%1").arg(_current_setPoint1,9,'f', 3) );
