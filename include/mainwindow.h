@@ -138,7 +138,7 @@ private:
     QTimer _setPointUpdateTimer;
     QTime _timer;
 
-    bool _connected;
+    //bool _connected;
 };
 
 #endif // MAINWINDOW_H

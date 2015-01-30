@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect( &_setPointUpdateTimer, SIGNAL(timeout()),
              this, SLOT(onSetPointUpdateTimerTimeout()) );
 
-    _connected = false;
+    //_connected = false;
 
     _current_value0=0.0;
     _current_value1=0.0;
@@ -194,11 +194,13 @@ void MainWindow::on_pushButton_update_serial_list_clicked()
 
 void MainWindow::disconnectSerial()
 {
-    if( !_uNav || !_connected )
-        return;
+    //if( !_uNav || !_connected )
+    //    return;
 
     try
     {
+        _setPointUpdateTimer.stop();
+
         sendEnable(0, false );
         sendEnable(1, false );
 
@@ -233,7 +235,7 @@ void MainWindow::disconnectSerial()
     ui->groupBox_motor_1->setEnabled( false );
     ui->groupBox_controls->setEnabled( false );
 
-    _connected = false;
+    //_connected = false;
 
     ui->widget_plot_data_0->setInteraction( QCP::iRangeDrag, true );
     ui->widget_plot_data_0->setInteraction( QCP::iRangeZoom, true );
@@ -256,10 +258,44 @@ bool MainWindow::connectSerial()
     try
     {
         _uNav = new ParserPacket( serialPort, 115200 );
+
+        //_connected = true;
+
+        if( !sendParams( 0 ) )
+            return false;
+        if( !sendParams( 1 ) )
+            return false;
+
+        if( ui->checkBox_enable_0->isChecked() )
+        {
+            if( !sendEnable(0, true ) )
+                return false;
+        }
+        else
+        {
+            if( !sendEnable(0, false ) )
+                return false;
+        }
+
+        if( ui->checkBox_enable_1->isChecked() )
+        {
+            if( !sendEnable(1, true ) )
+                return false;
+        }
+        else
+        {
+            if( !sendEnable(1, false ) )
+                return false;
+        }
+
+        if( !requestPidGains(0) )
+            return false;
+        if( !requestPidGains(1) )
+            return false;
     }
     catch( parser_exception& e)
     {
-        qDebug() << tr("Connection error: %1").arg(e.what());
+        qDebug() << tr("Connection error: %1").arg( e.what() );
 
         throw e;
         return false;
@@ -284,23 +320,7 @@ bool MainWindow::connectSerial()
     ui->groupBox_controls->setEnabled( true );
     ui->pushButton_start_motors->setEnabled( true );
 
-    _connected = true;
-
-    sendParams( 0 );
-    sendParams( 1 );
-
-    if( ui->checkBox_enable_0->isChecked() )
-        sendEnable(0, true );
-    else
-        sendEnable(0, false );
-
-    if( ui->checkBox_enable_1->isChecked() )
-        sendEnable(1, true );
-    else
-        sendEnable(1, false );
-
-    requestPidGains(0);
-    requestPidGains(1);
+    //_connected = true;
 
 
     return true;
@@ -308,8 +328,8 @@ bool MainWindow::connectSerial()
 
 bool MainWindow::stopMotors()
 {
-    if( !_connected )
-        return false;
+    //if( !_connected )
+    //    return false;
 
     try
     {
@@ -349,8 +369,8 @@ bool MainWindow::stopMotors()
 
 bool MainWindow::sendEnable(int motIdx, bool enable )
 {
-    if( !_connected )
-        return false;
+    //if( !_connected )
+    //    return false;
 
     try
     {
@@ -391,8 +411,8 @@ bool MainWindow::sendEnable(int motIdx, bool enable )
 
 bool MainWindow::sendSetpoint0( double setPoint )
 {
-    if( !_connected )
-        return false;
+    //if( !_connected )
+    //    return false;
 
     try
     {
@@ -426,8 +446,8 @@ bool MainWindow::sendSetpoint0( double setPoint )
 
 bool MainWindow::sendSetpoint1( double setPoint )
 {
-    if( !_connected )
-        return false;
+    //if( !_connected )
+    //    return false;
 
     try
     {
@@ -461,8 +481,8 @@ bool MainWindow::sendSetpoint1( double setPoint )
 
 bool MainWindow::sendPIDGains0(float kp, float ki, float kd )
 {
-    if( !_connected )
-        return false;
+    //if( !_connected )
+    //    return false;
 
     try
     {
@@ -500,8 +520,8 @@ bool MainWindow::sendPIDGains0(float kp, float ki, float kd )
 
 bool MainWindow::sendPIDGains1(float kp, float ki, float kd )
 {
-    if( !_connected )
-        return false;
+    //if( !_connected )
+    //    return false;
 
     try
     {
@@ -573,8 +593,8 @@ bool MainWindow::sendParams( int motIdx )
 
 bool MainWindow::requestPidGains( int motIdx )
 {
-    if( !_connected )
-        return false;
+    //if( !_connected )
+    //    return false;
 
     try
     {
@@ -647,8 +667,8 @@ bool MainWindow::requestPidGains( int motIdx )
 
 bool MainWindow::requestStatus(int motIdx)
 {
-    if( !_connected )
-        return false;
+    //if( !_connected )
+    //    return false;
 
     try
     {
@@ -725,8 +745,8 @@ bool MainWindow::requestStatus(int motIdx)
 bool MainWindow::sendMotorParams(int motIdx, float k_vel, float k_ang,
                                  int8_t versus, uint8_t enable_mode )
 {
-    if( !_connected )
-        return false;
+    //if( !_connected )
+    //    return false;
 
     try
     {
@@ -778,7 +798,7 @@ void MainWindow::on_pushButton_connect_clicked(bool checked)
             if( !connectSerial() )
             {
                 ui->pushButton_connect->setChecked(false);
-                QMessageBox::warning( this, tr("Connection error"), tr("Unknown error") );
+                QMessageBox::warning( this, tr("Error"), tr("Please verify the correctness of the connection to the board") );
                 return;
             }
         }
@@ -971,46 +991,68 @@ void MainWindow::onSetPointUpdateTimerTimeout()
         }
     }
 
-    if( ui->checkBox_enable_0->isChecked() )
+    try
     {
-        if(!sendSetpoint0( setPoint ) )
-            return;
 
-        if( !requestStatus( 0 ) )
-            return;
+        if( ui->checkBox_enable_0->isChecked() )
+        {
+            if(!sendSetpoint0( setPoint ) )
+                return;
 
-        _setPointVec0 << _current_setPoint0;
-        _timeVec0 << _curr_time_msec;
-        _currMotorValVec0 << _current_value0;
-        _errorVec0 << _current_error0;
-        _controlVec0 << _current_control0;
-        _controlVec1 << _current_control1;
+            if( !requestStatus( 0 ) )
+                return;
 
-        ui->lcdNumber_value_0->display( tr("%1").arg(_current_value0,9,'f', 3) );
-        ui->lcdNumber_setpoint_0->display( tr("%1").arg(_current_setPoint0,9,'f', 3) );
-        ui->lcdNumber_error_0->display( tr("%1").arg(_current_error0,9,'f', 3) );
+            _setPointVec0 << _current_setPoint0;
+            _timeVec0 << _curr_time_msec;
+            _currMotorValVec0 << _current_value0;
+            _errorVec0 << _current_error0;
+            _controlVec0 << _current_control0;
+            _controlVec1 << _current_control1;
 
-        updatePlots0();
+            ui->lcdNumber_value_0->display( tr("%1").arg(_current_value0,9,'f', 3) );
+            ui->lcdNumber_setpoint_0->display( tr("%1").arg(_current_setPoint0,9,'f', 3) );
+            ui->lcdNumber_error_0->display( tr("%1").arg(_current_error0,9,'f', 3) );
+
+            updatePlots0();
+        }
+
+        if( ui->checkBox_enable_1->isChecked() )
+        {
+            if(!sendSetpoint1( setPoint ) )
+                return;
+
+            if( !requestStatus( 1 ) )
+                return;
+
+            _setPointVec1 << _current_setPoint1;
+            _timeVec1 << _curr_time_msec;
+            _currMotorValVec1 << _current_value1;
+            _errorVec1 << _current_error1;
+
+            ui->lcdNumber_value_1->display( tr("%1").arg(_current_value1,9,'f', 3) );
+            ui->lcdNumber_setpoint_1->display( tr("%1").arg(_current_setPoint1,9,'f', 3) );
+            ui->lcdNumber_error_1->display( tr("%1").arg(_current_error1,9,'f', 3) );
+
+            updatePlots1();
+        }
     }
-
-    if( ui->checkBox_enable_1->isChecked() )
+    catch( parser_exception& e)
     {
-        if(!sendSetpoint1( setPoint ) )
-            return;
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
 
-        if( !requestStatus( 1 ) )
-            return;
+        throw e;
+    }
+    catch( boost::system::system_error& e)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
 
-        _setPointVec1 << _current_setPoint1;
-        _timeVec1 << _curr_time_msec;
-        _currMotorValVec1 << _current_value1;
-        _errorVec1 << _current_error1;
+        throw e;
+    }
+    catch(...)
+    {
+        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
 
-        ui->lcdNumber_value_1->display( tr("%1").arg(_current_value1,9,'f', 3) );
-        ui->lcdNumber_setpoint_1->display( tr("%1").arg(_current_setPoint1,9,'f', 3) );
-        ui->lcdNumber_error_1->display( tr("%1").arg(_current_error1,9,'f', 3) );
-
-        updatePlots1();
+        throw;
     }
 }
 
@@ -1182,7 +1224,7 @@ void MainWindow::updatePlots1()
         return;
     }
 
-    qreal time = (qreal)(_timeVec0.last()-_time_bias)/1000.0;
+    qreal time = (qreal)(_timeVec1.last()-_time_bias)/1000.0;
     qreal setPoint = _setPointVec1.last();
     qreal motorVal = _currMotorValVec1.last();
     qreal error = _errorVec1.last();
@@ -1403,5 +1445,4 @@ void MainWindow::on_pushButton_calculate_k_params_clicked()
 
     }
 }
-
 
