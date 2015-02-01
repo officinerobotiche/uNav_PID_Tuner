@@ -20,15 +20,18 @@ INCLUDEPATH += \
 SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
-    src/robotparamscalculatedialog.cpp
+    src/robotparamscalculatedialog.cpp \
+    src/qmotorpidparamwidget.cpp
 
 HEADERS  += \
     include/mainwindow.h \
-    include/robotparamscalculatedialog.h
+    include/robotparamscalculatedialog.h \
+    include/qmotorpidparamwidget.h
 
 FORMS    += \
     gui/mainwindow.ui \
-    gui/robotparamscalculatedialog.ui
+    gui/robotparamscalculatedialog.ui \
+    gui/qmotorpidparamwidget.ui
 
 RESOURCES += \
     gui/resources.qrc
