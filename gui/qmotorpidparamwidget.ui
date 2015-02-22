@@ -797,10 +797,10 @@ Motor</string>
                 <number>2</number>
                </property>
                <property name="minimum">
-                <double>-50.000000000000000</double>
+                <double>-30.000000000000000</double>
                </property>
                <property name="maximum">
-                <double>50.000000000000000</double>
+                <double>30.000000000000000</double>
                </property>
                <property name="singleStep">
                 <double>0.500000000000000</double>
@@ -1095,10 +1095,10 @@ Motor</string>
                    <number>2</number>
                   </property>
                   <property name="minimum">
-                   <double>-50.000000000000000</double>
+                   <double>-30.000000000000000</double>
                   </property>
                   <property name="maximum">
-                   <double>50.000000000000000</double>
+                   <double>30.000000000000000</double>
                   </property>
                   <property name="singleStep">
                    <double>0.500000000000000</double>
@@ -1131,10 +1131,10 @@ Motor</string>
                    <number>2</number>
                   </property>
                   <property name="minimum">
-                   <double>-50.000000000000000</double>
+                   <double>-30.000000000000000</double>
                   </property>
                   <property name="maximum">
-                   <double>50.000000000000000</double>
+                   <double>30.000000000000000</double>
                   </property>
                   <property name="singleStep">
                    <double>0.500000000000000</double>
