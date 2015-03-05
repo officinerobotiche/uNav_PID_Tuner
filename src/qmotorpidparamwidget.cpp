@@ -17,10 +17,10 @@ QMotorPidParamWidget::QMotorPidParamWidget(QWidget *parent) :
     connect( &_setPointUpdateTimer, SIGNAL(timeout()),
              this, SLOT(onSetPointUpdateTimerTimeout()) );
 
-    ui->lcdNumber_value->display( tr("%1").arg(0, 9,'f', 3) );
-    ui->lcdNumber_setpoint->display( tr("%1").arg(0, 9,'f', 3) );
-    ui->lcdNumber_error->display( tr("%1").arg(0, 9,'f', 3) );
-    ui->lcdNumber_control->display( tr("%1").arg(0, 9,'f', 3) );
+    ui->lcdNumber_value->display( tr("%1").arg(0.0, 9,'f', 3) );
+    ui->lcdNumber_setpoint->display( tr("%1").arg(0.0, 9,'f', 3) );
+    ui->lcdNumber_error->display( tr("%1").arg(0.0, 9,'f', 3) );
+    ui->lcdNumber_control->display( tr("%1").arg(0.0, 9,'f', 3) );
 
     _enablePolarity = ui->radioButton_polarity_low->isChecked()?0:1;
 
@@ -201,7 +201,7 @@ void QMotorPidParamWidget::sendParams( )
         return;
     }
 
-    int8_t versus =  versus = ui->checkBox_invert_mot->isChecked()?-1:1;
+    qint8 versus =  versus = ui->checkBox_invert_mot->isChecked()?-1:1;
 
     _enablePolarity = ui->radioButton_polarity_high->isChecked()?1:0;
 
