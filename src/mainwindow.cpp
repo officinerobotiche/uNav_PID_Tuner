@@ -224,14 +224,11 @@ bool MainWindow::stopMotor( quint8 motorIdx )
     try
     {
         motor_control_t motor_ref = (int16_t) 0;
+        motor_command_map_t motor_command;
+        motor_command.bitset.motor = motorIdx;
+        motor_command.bitset.command = MOTOR_VEL_PID;
 
-        quint8 command;
-        if(motorIdx==0)
-            command = VEL_MOTOR_L;
-        else
-            command = VEL_MOTOR_R;
-
-        _uNav->parserSendPacket(_uNav->createDataPacket( command, HASHMAP_MOTION, (abstract_message_u*) & motor_ref), 3, boost::posix_time::millisec(200));
+        _uNav->parserSendPacket(_uNav->createDataPacket( motor_command.command_message, HASHMAP_MOTOR, (message_abstract_u*) & motor_ref), 3, boost::posix_time::millisec(200));
 
         if( !sendEnable(motorIdx, false ) )
             return false;
@@ -268,15 +265,12 @@ bool MainWindow::sendEnable(int motIdx, bool enable )
 
     try
     {
-        motor_control_t enable_val = enable ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
+        motor_state_t enable_val = enable ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
+        motor_command_map_t motor_command;
+        motor_command.bitset.motor = motIdx;
+        motor_command.bitset.command = MOTOR_STATE;
 
-        quint8 command;
-        if(motIdx==0)
-            command = ENABLE_MOTOR_L;
-        else
-            command = ENABLE_MOTOR_R;
-
-        _uNav->parserSendPacket( _uNav->createDataPacket( command, HASHMAP_MOTION, (abstract_message_u*)&enable_val ) );
+        _uNav->parserSendPacket( _uNav->createDataPacket( motor_command.command_message, HASHMAP_MOTOR, (message_abstract_u*)&enable_val ) );
     }
     catch( parser_exception& e)
     {
@@ -311,14 +305,11 @@ bool MainWindow::sendSetpoint( quint8 motorIdx, double setPoint )
     try
     {
         motor_control_t motor_ref = (int16_t) (setPoint*1000.0); //Convert in centirad/s
+        motor_command_map_t motor_command;
+        motor_command.bitset.motor = motorIdx;
+        motor_command.bitset.command = MOTOR_VEL_REF;
 
-        quint8 command;
-        if(motorIdx==0)
-            command = VEL_MOTOR_L;
-        else
-            command = VEL_MOTOR_R;
-
-        _uNav->parserSendPacket(_uNav->createDataPacket( command, HASHMAP_MOTION, (abstract_message_u*) & motor_ref), 3, boost::posix_time::millisec(200));
+        _uNav->parserSendPacket(_uNav->createDataPacket( motor_command.command_message, HASHMAP_MOTOR, (message_abstract_u*) & motor_ref), 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
     {
@@ -354,19 +345,15 @@ bool MainWindow::sendPIDGains( quint8 motorIdx, double kp, double ki, double kd 
 
     try
     {
-        pid_control_t pid;
+        motor_pid_t pid;
         pid.kp = kp;
         pid.ki = ki;
         pid.kd = kd;
+        motor_command_map_t motor_command;
+        motor_command.bitset.motor = motorIdx;
+        motor_command.bitset.command = MOTOR_VEL_PID;
 
-        quint8 command;
-        if(motorIdx==0)
-            command = PID_CONTROL_L;
-        else
-            command = PID_CONTROL_R;
-
-
-        _uNav->parserSendPacket(_uNav->createDataPacket( command, HASHMAP_MOTION, (abstract_message_u*) & pid), 3, boost::posix_time::millisec(200));
+        _uNav->parserSendPacket(_uNav->createDataPacket( motor_command.command_message, HASHMAP_MOTOR, (message_abstract_u*) & pid), 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
     {
@@ -401,37 +388,38 @@ bool MainWindow::requestPidGains( quint8 motIdx )
 
     try
     {
-        quint8 command=PID_CONTROL_L;
-        if(motIdx==0)
-            command = PID_CONTROL_L;
-        else
-            command = PID_CONTROL_R;
+        motor_command_map_t motor_command;
+        motor_command.bitset.motor = motIdx;
+        motor_command.bitset.command = MOTOR_VEL_PID;
 
-        information_packet_t send = _uNav->createPacket( command, REQUEST, HASHMAP_MOTION);
+        packet_information_t send = _uNav->createPacket( motor_command.command_message, PACKET_REQUEST, HASHMAP_MOTOR);
         packet_t received = _uNav->sendSyncPacket( _uNav->encoder(send), 3, boost::posix_time::millisec(200) );
 
         // parse packet
-        vector<information_packet_t> list = _uNav->parsing(received);
+        vector<packet_information_t> list = _uNav->parsing(received);
         //get first packet
-        information_packet_t first = list.at(0);
+        packet_information_t first = list.at(0);
 
-        if(first.option == DATA)
+        if(first.option == PACKET_DATA)
         {
-            if(first.type == HASHMAP_MOTION)
+            if(first.type == HASHMAP_MOTOR)
             {
-                pid_control_t pid0, pid1;
-
-                switch(first.command)
+                motor_pid_t pid0, pid1;
+                motor_command_map_t command;
+                command.command_message = first.command;
+                switch(command.bitset.command)
                 {
-                case PID_CONTROL_L:
-                    pid0 = first.packet.pid;
-
-                    ui->widget_motor_0->setPidParams( pid0.kp, pid0.ki, pid0.kd );
-                    break;
-                case PID_CONTROL_R:
-                    pid1 = first.packet.pid;
-
-                    ui->widget_motor_1->setPidParams( pid1.kp, pid1.ki, pid1.kd );
+                case MOTOR_VEL_PID:
+                    switch(command.bitset.motor) {
+                    case 0:
+                        pid0 = first.message.motor_pid;
+                        ui->widget_motor_0->setPidParams( pid0.kp, pid0.ki, pid0.kd );
+                        break;
+                    case 1:
+                        pid1 = first.message.motor_pid;
+                        ui->widget_motor_1->setPidParams( pid1.kp, pid1.ki, pid1.kd );
+                        break;
+                    }
                     break;
                 }
             }
@@ -470,14 +458,18 @@ bool MainWindow::requestStatus(quint8 motIdx)
 
     try
     {
-        quint8 command=MOTOR_L;
-        if(motIdx==0)
-            command = MOTOR_L;
-        else
-            command = MOTOR_R;
+        motor_command_map_t motor_command;
+        motor_command.bitset.motor = motIdx;
+        motor_command.bitset.command = MOTOR;
+        motor_command_map_t motor_command2;
+        motor_command2.bitset.motor = motIdx;
+        motor_command2.bitset.command = MOTOR_VEL_REF;
 
-        information_packet_t send = _uNav->createPacket( command, REQUEST, HASHMAP_MOTION);
-        packet_t received = _uNav->sendSyncPacket( _uNav->encoder(send), 3, boost::posix_time::millisec(200) );
+        vector<packet_information_t> list_send;
+        list_send.push_back(_uNav->createPacket( motor_command.command_message, PACKET_REQUEST, HASHMAP_MOTOR));
+        list_send.push_back(_uNav->createPacket( motor_command2.command_message, PACKET_REQUEST, HASHMAP_MOTOR));
+
+        packet_t received = _uNav->sendSyncPacket( _uNav->encoder(list_send), 3, boost::posix_time::millisec(200) );
 
         // >>>>> Time
         int elapsed = _timer.elapsed();
@@ -487,42 +479,55 @@ bool MainWindow::requestStatus(quint8 motIdx)
         // <<<<< Time
 
         // parse packet
-        vector<information_packet_t> list = _uNav->parsing(received);
+        vector<packet_information_t> list = _uNav->parsing(received);
         //get first packet
-        information_packet_t first = list.at(0);
+        packet_information_t first = list.at(0);
 
-        if(first.option == DATA)
+        if(first.option == PACKET_DATA)
         {
             if(first.type == HASHMAP_MOTION)
             {
                 motor_t motor0, motor1;
-
-                switch(first.command)
+                motor_control_t ref0, ref1;
+                motor_command_map_t command;
+                command.command_message = first.command;
+                switch(command.bitset.command)
                 {
-                case MOTOR_L:
-                    motor0 = first.packet.motor;
+                case MOTOR:
+                    switch(command.bitset.motor) {
+                    case 0:
+                        motor0 = first.message.motor;
 
-                    _current_value_0 = ((double)motor0.measure_vel)/1000.0;
-                    _current_setPoint_0 = ((double)motor0.refer_vel)/1000.0;
-                    _current_error_0 = _current_setPoint_0-_current_value_0;
-                    _current_control_0 = ((double)motor0.control_vel)/1000.0;
+                        _current_value_0 = ((double)motor0.velocity)/1000.0;
+                        _current_error_0 = _current_setPoint_0-_current_value_0;
+                        _current_control_0 = ((double)motor0.volt)/1000.0;
 
-                    ui->widget_motor_0->setStatus( _curr_time_msec, _current_value_0, _current_setPoint_0, _current_error_0, _current_control_0 );
+                        ui->widget_motor_0->setStatus( _curr_time_msec, _current_value_0, _current_setPoint_0, _current_error_0, _current_control_0 );
+                        //qDebug() << tr("Time: %1").arg( _curr_time_msec );
+                        break;
+                    case 1:
+                        motor1 = first.message.motor;
 
-                    //qDebug() << tr("Time: %1").arg( _curr_time_msec );
+                        _current_value_1 = ((double)motor1.velocity)/1000.0;
+                        _current_error_1 = _current_setPoint_1-_current_value_1;
+                        _current_control_1 = ((double)motor1.volt)/1000.0;
 
+                        ui->widget_motor_1->setStatus( _curr_time_msec, _current_value_1, _current_setPoint_1, _current_error_1, _current_control_1 );
+
+                        break;
+                    }
                     break;
-
-                case MOTOR_R:
-                    motor1 = first.packet.motor;
-
-                    _current_value_1 = ((double)motor1.measure_vel)/1000.0;
-                    _current_setPoint_1 = ((double)motor1.refer_vel)/1000.0;
-                    _current_error_1 = _current_setPoint_1-_current_value_1;
-                    _current_control_1 = ((double)motor1.control_vel)/1000.0;
-
-                    ui->widget_motor_1->setStatus( _curr_time_msec, _current_value_1, _current_setPoint_1, _current_error_1, _current_control_1 );
-
+                case MOTOR_VEL_REF:
+                    switch(command.bitset.motor) {
+                    case 0:
+                        ref0 = first.message.motor_control;
+                        _current_setPoint_0 = ((double)ref0)/1000.0;
+                        break;
+                    case 1:
+                        ref1 = first.message.motor_control;
+                        _current_setPoint_1 = ((double)ref1)/1000.0;
+                        break;
+                    }
                     break;
                 }
             }
@@ -562,19 +567,17 @@ bool MainWindow::sendMotorParams(quint8 motIdx, double k_vel, double k_ang,
 
     try
     {
-        parameter_motor_t param;
+        motor_parameter_t param;
         param.enable_set = enable_mode;
-        param.k_ang = k_ang;
-        param.k_vel = k_vel;
-        param.versus = versus;
+//        param.k_ang = k_ang; ///< TODO
+//        param.k_vel = k_vel; ///< TODO
+        param.rotation = versus;
 
-        quint8 command;
-        if(motIdx==0)
-            command = PARAMETER_MOTOR_L;
-        else
-            command = PARAMETER_MOTOR_R;
+        motor_command_map_t motor_command;
+        motor_command.bitset.motor = motIdx;
+        motor_command.bitset.command = MOTOR_PARAMETER;
 
-        _uNav->parserSendPacket(_uNav->createDataPacket(command, HASHMAP_MOTION, (abstract_message_u*) & param), 3, boost::posix_time::millisec(200));
+        _uNav->parserSendPacket(_uNav->createDataPacket(motor_command.command_message, HASHMAP_MOTOR, (message_abstract_u*) & param), 3, boost::posix_time::millisec(200));
     }
     catch( parser_exception& e)
     {
