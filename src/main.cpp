@@ -20,7 +20,8 @@ int main(int argc, char *argv[])
     QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedStates));
 
     MainWindow w;
-    w.show();
+    //w.show();
+    w.showMaximized();
 
     return a.exec();
 }

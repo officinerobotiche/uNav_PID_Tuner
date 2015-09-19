@@ -7,7 +7,7 @@
 #include <QTimer>
 #include <QTime>
 
-#include <ParserPacket.h>
+#include <interface/unavinterface.h>
 
 using namespace std;
 
@@ -39,7 +39,7 @@ public slots:
     bool sendPIDGains( quint8 motorIdx, double kp, double ki, double kd );
     bool requestPidGains(quint8 motIdx );
     //bool sendParams( quint8 motIdx);
-    bool sendMotorParams(quint8 motIdx, double k_vel, double k_ang, qint8 versus, quint8 enable_mode);
+    bool sendMotorParams(quint8 motIdx, quint16 cpr, float ratio, qint8 versus, quint8 enable_mode, quint8 enc_pos, qint16 bridge_volt);
     bool requestStatus(quint8 motIdx);
     // <<<<< Motor commands
 
@@ -72,25 +72,22 @@ private slots:
 //    void on_pushButton_calculate_k_params_clicked();
 
     void on_pushButton_reset_zoom_clicked();
-
     void on_tabWidget_motors_destroyed();
 
 private:
     Ui::MainWindow *ui;
 
-    ParserPacket* _uNav;    
-
-    //bool _connected;
+    UNavInterface* _uNav;
 
     double _current_value_0;
     double _current_setPoint_0;
     double _current_error_0;
-    double _current_control_0;
+    // double _current_control_0; for the future
 
     double _current_value_1;
     double _current_setPoint_1;
     double _current_error_1;
-    double _current_control_1;
+    // double _current_control_1; for the future
 
     quint64 _curr_time_msec;
 

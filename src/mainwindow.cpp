@@ -106,7 +106,7 @@ void MainWindow::disconnectSerial()
         sendEnable(0, false );
         sendEnable(1, false );
 
-        _uNav->close();
+        _uNav->disconnect();
     }
     catch( parser_exception& e)
     {
@@ -146,7 +146,8 @@ bool MainWindow::connectSerial()
 
     try
     {
-        _uNav = new ParserPacket( serialPort, 115200 );
+        _uNav = new UNavInterface();
+        _uNav->connect( serialPort, 115200 );
 
         //_connected = true;
 
@@ -199,7 +200,7 @@ bool MainWindow::connectSerial()
     }
 
     ui->widget_motor_0->enableControls( true );
-    ui->widget_motor_1->enableControls( true);
+    ui->widget_motor_1->enableControls( true );
 
     //_connected = true;
 
@@ -218,179 +219,22 @@ bool MainWindow::startMotor( quint8 motorIdx )
 
 bool MainWindow::stopMotor( quint8 motorIdx )
 {
-    //if( !_connected )
-    //    return false;
-
-    try
-    {
-        motor_control_t motor_ref = (int16_t) 0;
-
-        quint8 command;
-        if(motorIdx==0)
-            command = VEL_MOTOR_L;
-        else
-            command = VEL_MOTOR_R;
-
-        _uNav->parserSendPacket(_uNav->createDataPacket( command, HASHMAP_MOTION, (abstract_message_u*) & motor_ref), 3, boost::posix_time::millisec(200));
-
-        if( !sendEnable(motorIdx, false ) )
-            return false;
-    }
-    catch( parser_exception& e)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
-
-        throw e;
-        return false;
-    }
-    catch( boost::system::system_error& e)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
-
-        throw e;
-        return false;
-    }
-    catch(...)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
-
-        throw;
-        return false;
-    }
-
-    return true;
+    return _uNav->sendMotorSpeed( motorIdx, 0 );
 }
 
 bool MainWindow::sendEnable(int motIdx, bool enable )
 {
-    //if( !_connected )
-    //    return false;
-
-    try
-    {
-        motor_control_t enable_val = enable ? STATE_CONTROL_VELOCITY : STATE_CONTROL_DISABLE;
-
-        quint8 command;
-        if(motIdx==0)
-            command = ENABLE_MOTOR_L;
-        else
-            command = ENABLE_MOTOR_R;
-
-        _uNav->parserSendPacket( _uNav->createDataPacket( command, HASHMAP_MOTION, (abstract_message_u*)&enable_val ) );
-    }
-    catch( parser_exception& e)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
-
-        throw e;
-        return false;
-    }
-    catch( boost::system::system_error& e)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
-
-        throw e;
-        return false;
-    }
-    catch(...)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
-
-        throw;
-        return false;
-    }
-
-    return true;
+    return _uNav->enableSpeedControl( motIdx, enable);
 }
 
 bool MainWindow::sendSetpoint( quint8 motorIdx, double setPoint )
 {
-    //if( !_connected )
-    //    return false;
-
-    try
-    {
-        motor_control_t motor_ref = (int16_t) (setPoint*1000.0); //Convert in centirad/s
-
-        quint8 command;
-        if(motorIdx==0)
-            command = VEL_MOTOR_L;
-        else
-            command = VEL_MOTOR_R;
-
-        _uNav->parserSendPacket(_uNav->createDataPacket( command, HASHMAP_MOTION, (abstract_message_u*) & motor_ref), 3, boost::posix_time::millisec(200));
-    }
-    catch( parser_exception& e)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
-
-        throw e;
-        return false;
-    }
-    catch( boost::system::system_error& e)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
-
-        throw e;
-        return false;
-    }
-    catch(...)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
-
-        throw;
-        return false;
-    }
-
-    return true;
+    return _uNav->sendMotorSpeed( motorIdx, setPoint );
 }
-
-
 
 bool MainWindow::sendPIDGains( quint8 motorIdx, double kp, double ki, double kd )
 {
-    //if( !_connected )
-    //    return false;
-
-    try
-    {
-        pid_control_t pid;
-        pid.kp = kp;
-        pid.ki = ki;
-        pid.kd = kd;
-
-        quint8 command;
-        if(motorIdx==0)
-            command = PID_CONTROL_L;
-        else
-            command = PID_CONTROL_R;
-
-
-        _uNav->parserSendPacket(_uNav->createDataPacket( command, HASHMAP_MOTION, (abstract_message_u*) & pid), 3, boost::posix_time::millisec(200));
-    }
-    catch( parser_exception& e)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
-
-        throw e;
-        return false;
-    }
-    catch( boost::system::system_error& e)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
-
-        throw e;
-        return false;
-    }
-    catch(...)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
-
-        throw;
-        return false;
-    }
-
-    return true;
+    return _uNav->sendPIDGains( motorIdx, kp, ki, kd );
 }
 
 
@@ -399,206 +243,64 @@ bool MainWindow::requestPidGains( quint8 motIdx )
     //if( !_connected )
     //    return false;
 
-    try
-    {
-        quint8 command=PID_CONTROL_L;
-        if(motIdx==0)
-            command = PID_CONTROL_L;
-        else
-            command = PID_CONTROL_R;
+    double kp,ki,kd;
 
-        information_packet_t send = _uNav->createPacket( command, REQUEST, HASHMAP_MOTION);
-        packet_t received = _uNav->sendSyncPacket( _uNav->encoder(send), 3, boost::posix_time::millisec(200) );
-
-        // parse packet
-        vector<information_packet_t> list = _uNav->parsing(received);
-        //get first packet
-        information_packet_t first = list.at(0);
-
-        if(first.option == DATA)
-        {
-            if(first.type == HASHMAP_MOTION)
-            {
-                pid_control_t pid0, pid1;
-
-                switch(first.command)
-                {
-                case PID_CONTROL_L:
-                    pid0 = first.packet.pid;
-
-                    ui->widget_motor_0->setPidParams( pid0.kp, pid0.ki, pid0.kd );
-                    break;
-                case PID_CONTROL_R:
-                    pid1 = first.packet.pid;
-
-                    ui->widget_motor_1->setPidParams( pid1.kp, pid1.ki, pid1.kd );
-                    break;
-                }
-            }
-        }
-
-    }
-    catch( parser_exception& e)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
-
-        throw e;
+    if( !_uNav->getPIDGains( motIdx, kp, ki, kd ) )
         return false;
-    }
-    catch( boost::system::system_error& e)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
 
-        throw e;
-        return false;
-    }
-    catch(...)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
-
-        throw;
-        return false;
-    }
+    if( motIdx==0 )
+        ui->widget_motor_0->setPidParams( kp, ki, kd );
+    else
+        ui->widget_motor_1->setPidParams( kp, ki, kd );
 
     return true;
 }
 
 bool MainWindow::requestStatus(quint8 motIdx)
 {
-    //if( !_connected )
-    //    return false;
+    double speed, speedRef;
+    bool speedOK = _uNav->getMotorSpeed( motIdx, speed );
+    bool refOK = _uNav->getSpeedRef( motIdx, speedRef );
 
-    try
-    {
-        quint8 command=MOTOR_L;
-        if(motIdx==0)
-            command = MOTOR_L;
-        else
-            command = MOTOR_R;
-
-        information_packet_t send = _uNav->createPacket( command, REQUEST, HASHMAP_MOTION);
-        packet_t received = _uNav->sendSyncPacket( _uNav->encoder(send), 3, boost::posix_time::millisec(200) );
-
-        // >>>>> Time
-        int elapsed = _timer.elapsed();
-        _timer.restart();
-
-        _curr_time_msec += elapsed;
-        // <<<<< Time
-
-        // parse packet
-        vector<information_packet_t> list = _uNav->parsing(received);
-        //get first packet
-        information_packet_t first = list.at(0);
-
-        if(first.option == DATA)
-        {
-            if(first.type == HASHMAP_MOTION)
-            {
-                motor_t motor0, motor1;
-
-                switch(first.command)
-                {
-                case MOTOR_L:
-                    motor0 = first.packet.motor;
-
-                    _current_value_0 = ((double)motor0.measure_vel)/1000.0;
-                    _current_setPoint_0 = ((double)motor0.refer_vel)/1000.0;
-                    _current_error_0 = _current_setPoint_0-_current_value_0;
-                    _current_control_0 = ((double)motor0.control_vel)/1000.0;
-
-                    ui->widget_motor_0->setStatus( _curr_time_msec, _current_value_0, _current_setPoint_0, _current_error_0, _current_control_0 );
-
-                    //qDebug() << tr("Time: %1").arg( _curr_time_msec );
-
-                    break;
-
-                case MOTOR_R:
-                    motor1 = first.packet.motor;
-
-                    _current_value_1 = ((double)motor1.measure_vel)/1000.0;
-                    _current_setPoint_1 = ((double)motor1.refer_vel)/1000.0;
-                    _current_error_1 = _current_setPoint_1-_current_value_1;
-                    _current_control_1 = ((double)motor1.control_vel)/1000.0;
-
-                    ui->widget_motor_1->setStatus( _curr_time_msec, _current_value_1, _current_setPoint_1, _current_error_1, _current_control_1 );
-
-                    break;
-                }
-            }
-        }
-
-    }
-    catch( parser_exception& e)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
-
-        throw e;
+    if( !speedOK || !refOK )
         return false;
-    }
-    catch( boost::system::system_error& e)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
 
-        throw e;
-        return false;
-    }
-    catch(...)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
+    // >>>>> Time
+    int elapsed = _timer.elapsed();
+    _timer.restart();
 
-        throw;
-        return false;
+    _curr_time_msec += elapsed;
+    // <<<<< Time
+
+    switch( motIdx )
+    {
+    case 0:
+        _current_value_0 = speed;
+        _current_setPoint_0 = speedRef;
+        _current_error_0 = _current_setPoint_0-_current_value_0;
+
+        ui->widget_motor_0->setStatus( _curr_time_msec, _current_value_0, _current_setPoint_0, _current_error_0 );
+
+        break;
+
+    case 1:
+        _current_value_1 = speed;
+        _current_setPoint_1 = speedRef;
+        _current_error_1 = _current_setPoint_1-_current_value_1;
+
+        ui->widget_motor_1->setStatus( _curr_time_msec, _current_value_1, _current_setPoint_1, _current_error_1 );
+
+        break;
     }
 
     return true;
 }
 
-bool MainWindow::sendMotorParams(quint8 motIdx, double k_vel, double k_ang,
-                                 qint8 versus, quint8 enable_mode )
+bool MainWindow::sendMotorParams( quint8 motIdx, quint16 cpr, float ratio,
+                                  qint8 versus, quint8 enable_mode,
+                                  quint8 enc_pos, qint16 bridge_volt )
 {
-    //if( !_connected )
-    //    return false;
-
-    try
-    {
-        parameter_motor_t param;
-        param.enable_set = enable_mode;
-        param.k_ang = k_ang;
-        param.k_vel = k_vel;
-        param.versus = versus;
-
-        quint8 command;
-        if(motIdx==0)
-            command = PARAMETER_MOTOR_L;
-        else
-            command = PARAMETER_MOTOR_R;
-
-        _uNav->parserSendPacket(_uNav->createDataPacket(command, HASHMAP_MOTION, (abstract_message_u*) & param), 3, boost::posix_time::millisec(200));
-    }
-    catch( parser_exception& e)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg(e.what());
-
-        throw e;
-        return false;
-    }
-    catch( boost::system::system_error& e)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: %1").arg( e.what() );
-
-        throw e;
-        return false;
-    }
-    catch(...)
-    {
-        qDebug() << Q_FUNC_INFO << tr("Serial error: Unknown error");
-
-        throw;
-        return false;
-    }
-
-    return true;
+    return _uNav->sendMotorParams( motIdx, cpr, ratio, versus, enable_mode, enc_pos, bridge_volt );
 }
 
 void MainWindow::on_pushButton_connect_clicked(bool checked)

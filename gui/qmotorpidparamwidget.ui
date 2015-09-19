@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>822</height>
+    <width>800</width>
+    <height>737</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -20,6 +26,21 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
+   <property name="leftMargin">
+    <number>3</number>
+   </property>
+   <property name="topMargin">
+    <number>3</number>
+   </property>
+   <property name="rightMargin">
+    <number>3</number>
+   </property>
+   <property name="bottomMargin">
+    <number>3</number>
+   </property>
+   <property name="spacing">
+    <number>2</number>
+   </property>
    <item row="0" column="0" rowspan="2">
     <widget class="QGroupBox" name="groupBox_plot">
      <property name="sizePolicy">
@@ -44,6 +65,9 @@
       <property name="bottomMargin">
        <number>5</number>
       </property>
+      <property name="spacing">
+       <number>3</number>
+      </property>
       <item row="0" column="0">
        <widget class="QGroupBox" name="groupBox_3">
         <property name="sizePolicy">
@@ -67,6 +91,9 @@
          </property>
          <property name="bottomMargin">
           <number>5</number>
+         </property>
+         <property name="spacing">
+          <number>3</number>
          </property>
          <item row="0" column="1">
           <widget class="QCustomPlot" name="widget_plot_data" native="true">
@@ -104,6 +131,9 @@
          </property>
          <property name="bottomMargin">
           <number>5</number>
+         </property>
+         <property name="spacing">
+          <number>3</number>
          </property>
          <item row="0" column="0">
           <widget class="QCustomPlot" name="widget_plot_error" native="true">
@@ -151,8 +181,14 @@
       <property name="bottomMargin">
        <number>5</number>
       </property>
+      <property name="spacing">
+       <number>3</number>
+      </property>
       <item row="0" column="1">
        <layout class="QVBoxLayout" name="verticalLayout_10">
+        <property name="spacing">
+         <number>3</number>
+        </property>
         <item>
          <widget class="QPushButton" name="pushButton_send_gains">
           <property name="sizePolicy">
@@ -183,6 +219,9 @@
       </item>
       <item row="0" column="0">
        <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>3</number>
+        </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
@@ -331,6 +370,9 @@
       </item>
       <item row="0" column="2">
        <layout class="QVBoxLayout" name="verticalLayout_8">
+        <property name="spacing">
+         <number>3</number>
+        </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_20">
           <item>
@@ -439,42 +481,6 @@
           </item>
          </layout>
         </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_25">
-          <item>
-           <widget class="QLabel" name="label_24">
-            <property name="text">
-             <string>Control</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLCDNumber" name="lcdNumber_control">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>200</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>250</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="digitCount">
-             <number>8</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
        </layout>
       </item>
      </layout>
@@ -495,8 +501,26 @@
       <string>Controls</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_5">
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <property name="spacing">
+       <number>3</number>
+      </property>
       <item row="0" column="0">
        <layout class="QVBoxLayout" name="verticalLayout_12">
+        <property name="spacing">
+         <number>3</number>
+        </property>
         <item>
          <widget class="QPushButton" name="pushButton_start_motors">
           <property name="enabled">
@@ -535,6 +559,9 @@ Motor</string>
       </item>
       <item row="0" column="1">
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>3</number>
+        </property>
         <item>
          <widget class="QGroupBox" name="groupBox_16">
           <property name="sizePolicy">
@@ -547,6 +574,9 @@ Motor</string>
            <string>Enable Polarity</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="spacing">
+            <number>3</number>
+           </property>
            <property name="leftMargin">
             <number>5</number>
            </property>
@@ -603,6 +633,9 @@ Motor</string>
            <string>Rotation versus</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">
+           <property name="spacing">
+            <number>3</number>
+           </property>
            <property name="leftMargin">
             <number>5</number>
            </property>
@@ -636,7 +669,7 @@ Motor</string>
       <item row="0" column="2">
        <widget class="QGroupBox" name="groupBox_5">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -645,6 +678,9 @@ Motor</string>
          <string>Parameters</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_9">
+         <property name="spacing">
+          <number>3</number>
+         </property>
          <property name="leftMargin">
           <number>5</number>
          </property>
@@ -658,65 +694,116 @@ Motor</string>
           <number>5</number>
          </property>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_23">
+          <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
-            <widget class="QLabel" name="label_22">
-             <property name="text">
-              <string>K_vel</string>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <widget class="QLabel" name="label_5">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Encoder CPR</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_enc_cpr">
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>400</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="readOnly">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_k_vel">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="inputMethodHints">
-              <set>Qt::ImhFormattedNumbersOnly</set>
-             </property>
-             <property name="text">
-              <string>34278152.248661</string>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <item>
+              <widget class="QLabel" name="label_6">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Motor reduction [R:1]</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_motor_ratio">
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>18.33</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="readOnly">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_24">
+          <layout class="QHBoxLayout" name="horizontalLayout_11">
            <item>
-            <widget class="QLabel" name="label_23">
+            <widget class="QLabel" name="label_16">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="text">
-              <string>K_ang</string>
+              <string>Bridge Power (V)</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_k_ang">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="inputMethodHints">
-              <set>Qt::ImhFormattedNumbersOnly</set>
+            <widget class="QLineEdit" name="lineEdit_bridge">
+             <property name="maximumSize">
+              <size>
+               <width>80</width>
+               <height>16777215</height>
+              </size>
              </property>
              <property name="text">
-              <string>0.000214</string>
+              <string>12</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="readOnly">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
           </layout>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_calculate_k_params">
-           <property name="text">
-            <string>Calculate</string>
-           </property>
-          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_send_params">
@@ -758,8 +845,14 @@ Motor</string>
          <property name="bottomMargin">
           <number>5</number>
          </property>
+         <property name="horizontalSpacing">
+          <number>3</number>
+         </property>
          <item row="0" column="1">
           <layout class="QVBoxLayout" name="verticalLayout_4">
+           <property name="spacing">
+            <number>3</number>
+           </property>
            <item>
             <widget class="QRadioButton" name="radioButton_setpoint_fixed">
              <property name="sizePolicy">
@@ -844,15 +937,15 @@ Motor</string>
            <item>
             <widget class="QLabel" name="label_15">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
              <property name="minimumSize">
               <size>
-               <width>150</width>
-               <height>150</height>
+               <width>100</width>
+               <height>100</height>
               </size>
              </property>
              <property name="maximumSize">
@@ -876,6 +969,9 @@ Motor</string>
          </item>
          <item row="0" column="0">
           <layout class="QVBoxLayout" name="verticalLayout_5">
+           <property name="spacing">
+            <number>3</number>
+           </property>
            <item>
             <widget class="QRadioButton" name="radioButton_setpoint_dynamic">
              <property name="sizePolicy">
@@ -898,6 +994,21 @@ Motor</string>
               <string>Parameters</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_20">
+              <property name="leftMargin">
+               <number>5</number>
+              </property>
+              <property name="topMargin">
+               <number>5</number>
+              </property>
+              <property name="rightMargin">
+               <number>5</number>
+              </property>
+              <property name="bottomMargin">
+               <number>5</number>
+              </property>
+              <property name="spacing">
+               <number>3</number>
+              </property>
               <item row="1" column="1">
                <layout class="QHBoxLayout" name="horizontalLayout_15">
                 <item>

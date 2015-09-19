@@ -20,7 +20,7 @@ QMotorPidParamWidget::QMotorPidParamWidget(QWidget *parent) :
     ui->lcdNumber_value->display( tr("%1").arg(0.0, 9,'f', 3) );
     ui->lcdNumber_setpoint->display( tr("%1").arg(0.0, 9,'f', 3) );
     ui->lcdNumber_error->display( tr("%1").arg(0.0, 9,'f', 3) );
-    ui->lcdNumber_control->display( tr("%1").arg(0.0, 9,'f', 3) );
+    //ui->lcdNumber_control->display( tr("%1").arg(0.0, 9,'f', 3) );
 
     _enablePolarity = ui->radioButton_polarity_low->isChecked()?0:1;
 
@@ -181,31 +181,14 @@ void QMotorPidParamWidget::initPlots()
 
 void QMotorPidParamWidget::sendParams( )
 {
-    bool ok;
-
-    float k_vel = ui->lineEdit_k_vel->text().toFloat( &ok );
-
-    if( !ok )
-    {
-        QMessageBox::warning( this, tr("Incorrect value"),
-                              tr("Please insert a correct value for K_vel.\r\nRemember that decimal values use dot as separator.") );
-        return;
-    }
-
-    float k_ang = ui->lineEdit_k_ang->text().toFloat( &ok );
-
-    if( !ok )
-    {
-        QMessageBox::warning( this, tr("Incorrect value"),
-                              tr("Please insert a correct value for K_ang.\r\nRemember that decimal values use dot as separator.") );
-        return;
-    }
+    //  // TODO Adapt to new configuration
+    /*bool ok;
 
     qint8 versus =  versus = ui->checkBox_invert_mot->isChecked()?-1:1;
 
     _enablePolarity = ui->radioButton_polarity_high->isChecked()?1:0;
 
-    emit newMotorConfig( _motorIdx, k_vel, k_ang, versus, _enablePolarity );
+    emit newMotorConfig( _motorIdx, k_vel, k_ang, versus, _enablePolarity );*/
 }
 
 void QMotorPidParamWidget::setPidParams( double Kp, double Ki, double Kd )
@@ -217,19 +200,17 @@ void QMotorPidParamWidget::setPidParams( double Kp, double Ki, double Kd )
 
 void QMotorPidParamWidget::setMotorConfig( double Kvel, double Kang, bool inverse, bool enablePol )
 {
-    ui->lineEdit_k_ang->setText( tr("%1").arg(Kang) );
-    ui->lineEdit_k_vel->setText( tr("%1").arg(Kvel) );
     ui->checkBox_invert_mot->setChecked( inverse );
     ui->radioButton_polarity_low->setChecked( !enablePol );
     ui->radioButton_polarity_high->setChecked( enablePol );
 }
 
-void QMotorPidParamWidget::setStatus( quint64 time, double measure, double setPoint, double error , double control)
+void QMotorPidParamWidget::setStatus(quint64 time, double measure, double setPoint, double error /*, double control*/)
 {
     ui->lcdNumber_value->display( measure );
     ui->lcdNumber_setpoint->display( setPoint );
     ui->lcdNumber_error->display( error );
-    ui->lcdNumber_control->display( control );
+    // ui->lcdNumber_control->display( control );
 
     _curr_time_msec = time;
 
@@ -237,7 +218,7 @@ void QMotorPidParamWidget::setStatus( quint64 time, double measure, double setPo
     _setPointVec << setPoint;
     _currMotorValVec << measure;
     _errorVec << error;
-    _controlVec << control;
+    // _controlVec << control; for the future
 
     //qDebug() << tr("Time w: %1").arg( _curr_time_msec );
 
@@ -379,17 +360,17 @@ void QMotorPidParamWidget::updatePlots()
     qreal setPoint = _setPointVec.last();
     qreal motorVal = _currMotorValVec.last();
     qreal error = _errorVec.last();
-    qreal control = _controlVec.last();
+    // qreal control = _controlVec.last(); for the future
 
     ui->widget_plot_data->graph(0)->addData( time, motorVal );
     ui->widget_plot_data->graph(1)->addData( time, setPoint );
     ui->widget_plot_error->graph(0)->addData( time, error );
-    ui->widget_plot_error->graph(1)->addData( time, control );
+    // ui->widget_plot_error->graph(1)->addData( time, control );  for the future
 
     ui->widget_plot_data->graph(0)->removeDataBefore( time-_graphRange );
     ui->widget_plot_data->graph(1)->removeDataBefore( time-_graphRange );
     ui->widget_plot_error->graph(0)->removeDataBefore( time-_graphRange );
-    ui->widget_plot_error->graph(1)->removeDataBefore( time-_graphRange );
+    // ui->widget_plot_error->graph(1)->removeDataBefore( time-_graphRange );  for the future
 
     if( error < _min_err )
         _min_err = error*1.2;
@@ -401,14 +382,14 @@ void QMotorPidParamWidget::updatePlots()
     if( motorVal > _max_val )
         _max_val = motorVal*1.2;
 
-    if( control < _min_ctrl )
+    /*if( control < _min_ctrl )
         _min_ctrl = control*1.2;
     if( control > _max_ctrl )
-        _max_ctrl = control*1.2;
+        _max_ctrl = control*1.2;*/
 
     ui->widget_plot_data->yAxis->setRange( _min_val, _max_val );
     ui->widget_plot_error->yAxis->setRange( _min_err, _max_err );
-    ui->widget_plot_error->yAxis2->setRange( _min_ctrl, _max_ctrl);
+    //ui->widget_plot_error->yAxis2->setRange( _min_ctrl, _max_ctrl);
 
     ui->widget_plot_data->xAxis->setRange( time+(((qreal)(_updateTimeMsec))/1000.0)*2, _graphRange, Qt::AlignRight);
     ui->widget_plot_error->xAxis->setRange( time+(((qreal)(_updateTimeMsec))/1000.0)*2, _graphRange, Qt::AlignRight);
@@ -424,8 +405,8 @@ void QMotorPidParamWidget::resetZoom()
     _max_err = 0;
     _min_val = 0;
     _max_val = 0;
-    _min_ctrl = 0;
-    _max_ctrl = 0;
+    //_min_ctrl = 0;
+    //_max_ctrl = 0;
 
     updatePlots();
 }
@@ -436,14 +417,14 @@ void QMotorPidParamWidget::clearPlots()
     _setPointVec.clear();
     _currMotorValVec.clear();
     _errorVec.clear();
-    _controlVec.clear();
+    //_controlVec.clear();
 
     _min_err = 0;
     _max_err = 0;
     _min_val = 0;
     _max_val = 0;
-    _min_ctrl = 0;
-    _max_ctrl = 0;
+    //_min_ctrl = 0;
+    //_max_ctrl = 0;
 
     updatePlots();
 }
@@ -487,30 +468,12 @@ void QMotorPidParamWidget::on_pushButton_start_motors_clicked()
     _max_err = 0;
     _min_val = 0;
     _max_val = 0;
-    _min_ctrl = 0;
-    _max_ctrl = 0;
+    //_min_ctrl = 0;
+    //_max_ctrl = 0;
 
     _setPointUpdateTimer.start( _updateTimeMsec );
 
     emit startMotor( _motorIdx );
-}
-
-void QMotorPidParamWidget::on_pushButton_calculate_k_params_clicked()
-{
-    RobotParamsCalculateDialog dlg;
-
-    int res = dlg.exec();
-
-    if( res == QDialog::Accepted )
-    {
-        double k_ang=0.0,k_vel=0.0;
-
-        if( dlg.getParams( k_ang, k_vel) )
-        {
-            ui->lineEdit_k_ang->setText( tr("%1").arg(k_ang));
-            ui->lineEdit_k_vel->setText( tr("%1").arg(k_vel));
-        }
-    }
 }
 
 void QMotorPidParamWidget::on_pushButton_get_gains_clicked()

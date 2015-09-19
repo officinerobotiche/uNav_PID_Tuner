@@ -29,21 +29,20 @@ protected slots:
     void on_pushButton_set_dynamic_setpoint_clicked();
     void on_pushButton_send_gains_clicked();
     void on_pushButton_set_fixed_setpoint_clicked();
-    void on_pushButton_calculate_k_params_clicked();
 
     void onSetPointUpdateTimerTimeout();
 
 
 public slots:
     void setPidParams(double Kp, double Ki, double Kd );
-    void setMotorConfig( double Kvel, double Kang, bool inverse, bool enablePol );
-    void setStatus(quint64 time, double measure, double setPoint, double error, double control );
+    void setMotorConfig( double Kvel, double Kang, bool inverse, bool enablePol ); // TODO Adapt to new configuration
+    void setStatus(quint64 time, double measure, double setPoint, double error/*, double control=0 */);
     void resetZoom();
     void clearPlots();
 
 signals:
     void newPidParams( quint8 motorIdx, double Kp, double Ki, double Kd );
-    void newMotorConfig( quint8 motorIdx, double Kvel, double Kang, qint8 inverse, quint8 enablePol );
+    void newMotorConfig( quint8 motorIdx, double Kvel, double Kang, qint8 inverse, quint8 enablePol );  // TODO Adapt to new configuration
     void startMotor( quint8 motorIdx );
     void stopMotor( quint8 motorIdx );
     void newSetPoint( quint8 motorIdx, double setPoint );
@@ -73,7 +72,7 @@ private:
     QVector<qreal> _setPointVec;
     QVector<qreal> _currMotorValVec;
     QVector<qreal> _errorVec;
-    QVector<qreal> _controlVec;
+    // QVector<qreal> _controlVec; for the future
 
     qreal _graphRange;
 
@@ -95,8 +94,8 @@ private:
     double _max_err;
     double _min_val;
     double _max_val;
-    double _min_ctrl;
-    double _max_ctrl;
+    // double _min_ctrl; for the future
+    // double _max_ctrl; for the future
 
 
     quint8 _enablePolarity; ///< Polarity of the Enable signal
