@@ -163,17 +163,17 @@ void QMotorPidParamWidget::initPlots()
     ui->widget_plot_error->legend->setVisible( true );
     ui->widget_plot_error->legend->setFont( QFont("Arial",8) );
     ui->widget_plot_error->addGraph();
-    ui->widget_plot_error->addGraph(ui->widget_plot_error->xAxis2, ui->widget_plot_error->yAxis2);
+    //ui->widget_plot_error->addGraph(ui->widget_plot_error->xAxis2, ui->widget_plot_error->yAxis2);
     ui->widget_plot_error->graph(0)->setName( tr("error") );
     ui->widget_plot_error->graph(0)->setPen( errPen );
-    ui->widget_plot_error->graph(1)->setName( tr("control") );
-    ui->widget_plot_error->graph(1)->setPen( ctrlPen );
+    //ui->widget_plot_error->graph(1)->setName( tr("control") );
+    //ui->widget_plot_error->graph(1)->setPen( ctrlPen );
     ui->widget_plot_error->xAxis->setLabel( tr("time (msec)") );
     ui->widget_plot_error->yAxis->setLabel( tr("error (rad)") );
-    ui->widget_plot_error->yAxis2->setLabel( tr("control (V*sec/rad)") );
-    ui->widget_plot_error->yAxis->setRange( -DEFAULT_VALS_RANGE, DEFAULT_VALS_RANGE );
-    ui->widget_plot_error->yAxis2->setRange( -DEFAULT_VALS_RANGE, DEFAULT_VALS_RANGE );
-    ui->widget_plot_error->xAxis->setRange( 0, _graphRange );
+    //ui->widget_plot_error->yAxis2->setLabel( tr("control (V*sec/rad)") );
+    //ui->widget_plot_error->yAxis->setRange( -DEFAULT_VALS_RANGE, DEFAULT_VALS_RANGE );
+    //ui->widget_plot_error->yAxis2->setRange( -DEFAULT_VALS_RANGE, DEFAULT_VALS_RANGE );
+    //ui->widget_plot_error->xAxis->setRange( 0, _graphRange );
 
     ui->widget_plot_data->yAxis2->setVisible(true);
     ui->widget_plot_error->yAxis2->setVisible(true);
@@ -181,14 +181,14 @@ void QMotorPidParamWidget::initPlots()
 
 void QMotorPidParamWidget::sendParams( )
 {
-    //  // TODO Adapt to new configuration
-    /*bool ok;
+    qint8 versus = ui->checkBox_invert_mot->isChecked()?-1:1;
+    quint16 cpr = ui->lineEdit_enc_cpr->text().toInt();
+    quint8 enable_mode = ui->radioButton_polarity_high->isChecked()?1:0;
+    qint16 bridge_volt = (qint16)(ui->lineEdit_bridge->text().toFloat()*1000);
+    quint8 enc_pos = ui->radioButton_enc_wheel->isChecked()?0:1;
+    float ratio = ui->lineEdit_motor_ratio->text().toFloat();
 
-    qint8 versus =  versus = ui->checkBox_invert_mot->isChecked()?-1:1;
-
-    _enablePolarity = ui->radioButton_polarity_high->isChecked()?1:0;
-
-    emit newMotorConfig( _motorIdx, k_vel, k_ang, versus, _enablePolarity );*/
+    emit newMotorConfig(  _motorIdx, cpr, ratio, versus, enable_mode, enc_pos, bridge_volt );
 }
 
 void QMotorPidParamWidget::setPidParams( double Kp, double Ki, double Kd )
@@ -340,7 +340,7 @@ void QMotorPidParamWidget::updatePlots()
         ui->widget_plot_data->graph(0)->clearData();
         ui->widget_plot_data->graph(1)->clearData();
         ui->widget_plot_error->graph(0)->clearData();
-        ui->widget_plot_error->graph(1)->clearData();
+        //ui->widget_plot_error->graph(1)->clearData();
 
 
         _graphRange = DEFAULT_TIME_RANGE;

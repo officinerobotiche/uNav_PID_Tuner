@@ -42,7 +42,8 @@ public slots:
 
 signals:
     void newPidParams( quint8 motorIdx, double Kp, double Ki, double Kd );
-    void newMotorConfig( quint8 motorIdx, double Kvel, double Kang, qint8 inverse, quint8 enablePol );  // TODO Adapt to new configuration
+    void newMotorConfig( quint8 motIdx, quint16 cpr, float ratio,
+                         qint8 versus, quint8 enable_mode, quint8 enc_pos, qint16 bridge_volt );  // TODO Adapt to new configuration
     void startMotor( quint8 motorIdx );
     void stopMotor( quint8 motorIdx );
     void newSetPoint( quint8 motorIdx, double setPoint );

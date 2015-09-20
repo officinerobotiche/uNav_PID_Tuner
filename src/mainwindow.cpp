@@ -29,10 +29,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect( ui->widget_motor_1, SIGNAL(newSetPoint(quint8,double)),
              this, SLOT(sendSetpoint(quint8,double)) );
 
-    connect( ui->widget_motor_0, SIGNAL(newMotorConfig(quint8,double,double,qint8,quint8)),
-             this, SLOT(sendMotorParams(quint8,double,double,qint8,quint8)) );
-    connect( ui->widget_motor_1, SIGNAL(newMotorConfig(quint8,double,double,qint8,quint8)),
-             this, SLOT(sendMotorParams(quint8,double,double,qint8,quint8)) );
+    connect( ui->widget_motor_0, SIGNAL(newMotorConfig(quint8,quint16,float,qint8,quint8,quint8,qint16)),
+             this, SLOT(sendMotorParams(quint8,quint16,float,qint8,quint8,quint8,qint16)) );
+    connect( ui->widget_motor_1, SIGNAL(newMotorConfig(quint8,quint16,float,qint8,quint8,quint8,qint16)),
+             this, SLOT(sendMotorParams(quint8,quint16,float,qint8,quint8,quint8,qint16)) );
 
     connect( ui->widget_motor_0, SIGNAL(newPidParams(quint8,double,double,double)),
              this, SLOT(sendPIDGains(quint8,double,double,double)) );
@@ -298,7 +298,7 @@ bool MainWindow::requestStatus(quint8 motIdx)
 
 bool MainWindow::sendMotorParams( quint8 motIdx, quint16 cpr, float ratio,
                                   qint8 versus, quint8 enable_mode,
-                                  quint8 enc_pos, qint16 bridge_volt )
+                                  quint8 enc_pos, qint16 bridge_volt )                                    
 {
     return _uNav->sendMotorParams( motIdx, cpr, ratio, versus, enable_mode, enc_pos, bridge_volt );
 }

@@ -559,9 +559,6 @@ Motor</string>
       </item>
       <item row="0" column="1">
        <layout class="QVBoxLayout" name="verticalLayout_2">
-        <property name="spacing">
-         <number>3</number>
-        </property>
         <item>
          <widget class="QGroupBox" name="groupBox_16">
           <property name="sizePolicy">
@@ -573,7 +570,7 @@ Motor</string>
           <property name="title">
            <string>Enable Polarity</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
            <property name="spacing">
             <number>3</number>
            </property>
@@ -590,19 +587,6 @@ Motor</string>
             <number>5</number>
            </property>
            <item>
-            <widget class="QRadioButton" name="radioButton_polarity_high">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>High</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QRadioButton" name="radioButton_polarity_low">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -615,6 +599,19 @@ Motor</string>
              </property>
              <property name="checked">
               <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_polarity_high">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>High</string>
              </property>
             </widget>
            </item>
@@ -658,6 +655,47 @@ Motor</string>
              </property>
              <property name="text">
               <string>Invert</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string>Encoder position</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <property name="spacing">
+            <number>3</number>
+           </property>
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>5</number>
+           </property>
+           <item>
+            <widget class="QRadioButton" name="radioButton_enc_wheel">
+             <property name="text">
+              <string>Motor Shaft</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_enc_shaft">
+             <property name="text">
+              <string>Wheel Shaft</string>
              </property>
             </widget>
            </item>
